@@ -1,3 +1,14 @@
+# vscode config
+.vscode/*
+
+# note
+*.note.*
+
+# test
+./test/*
+./src/test/*
+*.test.*
+
 # Logs
 logs
 *.log
