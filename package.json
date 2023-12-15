@@ -5,7 +5,8 @@
 	"bin": "dist/cli.js",
 	"type": "module",
 	"scripts": {
-		"build": "babel --out-dir=dist source && chmod +x dist/cli.js",
+		"start": "dist/cli.js",
+		"build": "webpack && chmod +x dist/cli.js",
 		"dev": "babel --out-dir=dist --watch source",
 		"test": "prettier --check . && xo && ava"
 	},
