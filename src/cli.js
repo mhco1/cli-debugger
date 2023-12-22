@@ -4,7 +4,7 @@
 import React from 'react';
 import {render} from 'ink';
 import meow from 'meow';
-import App from '#src/app.js';
+import App from '~/src/app.js';
 
 const cli = meow(
 	`
