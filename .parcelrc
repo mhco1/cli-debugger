@@ -1,4 +1,7 @@
 {
     "extends": "@parcel/config-default",
-    "resolvers": ["@parcel/resolver-glob", "..."]
+    "resolvers": ["@parcel/resolver-glob", "..."],
+    "packagers": {
+        "*.{js,mjs,cjs}": "./parcel/plugins/packager-js/lib/index.js"
+    }
 }
