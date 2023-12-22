@@ -5,8 +5,8 @@
 *.note.*
 
 # test
-./test/*
-./src/test/*
+test/*
+src/test/*
 *.test.*
 
 # Logs
