@@ -8,8 +8,8 @@
 	"type": "module",
 	"scripts": {
 		"start": "dist/cli.js",
-		"build": "parcel build && chmod +x dist/cli.js",
-		"dev": "babel --out-dir=dist --watch source",
+		"build": "parcel build",
+		"watch": "parcel watch",
 		"test": "prettier --check . && xo && ava"
 	},
 	"files": [
@@ -29,6 +29,7 @@
 		"meow": "^11.0.0",
 		"node-loader": "^2.0.0",
 		"react": "^18.2.0",
+		"shelljs": "^0.8.5",
 		"webpack-node-externals": "^3.0.0"
 	},
 	"devDependencies": {
