@@ -15,19 +15,11 @@
 			"isLibrary": true,
 			"optimize": false,
 			"includeNodeModules": false
-		},
-		"server": {
-			"source": "src/server.js",
-			"context": "node",
-			"outputFormat": "esmodule",
-			"isLibrary": true,
-			"optimize": false,
-			"includeNodeModules": false
 		}
 	},
 	"scripts": {
-		"clearAll": "rm -r ./.parcel-cache ./dist ",
-		"clear": "rm -r ./dist ",
+		"clearAll": "rm -r ./.parcel-cache ./dist",
+		"clear": "rm -r ./dist",
 		"start": "dist/cli.js",
 		"build": "parcel build",
 		"watch": "parcel watch",

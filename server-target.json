@@ -1,0 +1,10 @@
+{
+    "server": {
+        "source": "src/server.js",
+        "context": "node",
+        "outputFormat": "esmodule",
+        "isLibrary": true,
+        "optimize": false,
+        "includeNodeModules": false
+    }
+}
