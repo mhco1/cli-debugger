@@ -5,7 +5,7 @@
         "..."
     ],
     "packagers": {
-        "*.{js,mjs,cjs}": "./parcel/plugins/packager-js/lib/index.js"
+        "cli.{js,mjs,cjs}": "./parcel/plugins/packager-js/lib/index.js"
     },
     "reporters": [
         "...",

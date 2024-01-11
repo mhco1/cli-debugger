@@ -3,10 +3,31 @@
 	"version": "0.0.0",
 	"license": "MIT",
 	"bin": "dist/cli.js",
-	"source": "src/cli.js",
-	"main": "dist/cli.js",
 	"type": "module",
+	"cli": "dist/cli.js",
+	"server": "dist/server.js",
+	"targets": {
+		"main": false,
+		"cli": {
+			"source": "src/cli.js",
+			"context": "node",
+			"outputFormat": "esmodule",
+			"isLibrary": true,
+			"optimize": false,
+			"includeNodeModules": false
+		},
+		"server": {
+			"source": "src/server.js",
+			"context": "node",
+			"outputFormat": "esmodule",
+			"isLibrary": true,
+			"optimize": false,
+			"includeNodeModules": false
+		}
+	},
 	"scripts": {
+		"clearAll": "rm -r ./.parcel-cache ./dist ",
+		"clear": "rm -r ./dist ",
 		"start": "dist/cli.js",
 		"build": "parcel build",
 		"watch": "parcel watch",
@@ -15,9 +36,6 @@
 	"files": [
 		"dist"
 	],
-	"imports": {
-		"#src/*": "./src/*"
-	},
 	"dependencies": {
 		"@vercel/webpack-asset-relocator-loader": "^1.7.3",
 		"acorn": "^8.11.2",
