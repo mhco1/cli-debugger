@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text } from 'ink';
 import asciify from 'asciify';
-import toPromise from '#src/utils/toPromise.js';
-import pkg from '#src/utils/pkg.js';
+import toPromise from '~/utils/toPromise.js';
+import pkg from '~/utils/pkg.js';
 
 const asciify2 = toPromise(asciify);
 const title = await asciify2(pkg.name, { font: 'drpepper' });

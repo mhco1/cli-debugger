@@ -2,11 +2,11 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Box, Text, useInput, useApp } from 'ink';
 import TextInput from 'ink-text-input';
-import uuid from '#src/utils/uuid.js';
-import toPromise from '#src/utils/toPromise.js';
-import { event } from '#src/events/index.js';
-import { context } from '#src/data.js';
-import Prompt from '#src/components/repl_prompt.js';
+import uuid from '~/utils/uuid.js';
+import toPromise from '~/utils/toPromise.js';
+import { event } from '~/events/index.js';
+import { context } from '~/data.js';
+import Prompt from '~/components/repl_prompt.js';
 
 export default ({ setHistory }) => {
     const { exit } = useApp();
