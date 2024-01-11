@@ -1,0 +1,1 @@
+export const context = { c: {}, now: '' };
