@@ -12,7 +12,7 @@ const Cursor = ({ k }) => {
     </>
 }
 
-export default ({ }) => {
+export default ({ onSubmit }) => {
     const [hist, setHist] = useState([]);
     const [s, setS] = useState({
         txt: '',
@@ -23,8 +23,11 @@ export default ({ }) => {
     const [k, txt2] = splitString(_txt2, 1);
 
     useInput((input, key) => {
+        if (key.upArrow) return
+        if (key.downArrow) return
         if (key.leftArrow) return (s.pos > 0 && setS(prev => ({ ...prev, pos: prev.pos - 1 })));
         if (key.rightArrow) return (s.pos < s.txt.length && setS(prev => ({ ...prev, pos: prev.pos + 1 })));
+        if (key.return) return onSubmit(s.txt);
         if (key.delete) return (s.pos > 0 && setS(prev => ({
             ...prev,
             txt: removeString(prev.txt, prev.pos),
