@@ -4,9 +4,6 @@
         "@parcel/resolver-glob",
         "..."
     ],
-    "packagers": {
-        "cli.{js,mjs,cjs}": "./parcel/plugins/packager-js/lib/index.js"
-    },
     "reporters": [
         "...",
         "./parcel/plugins/reporter.js"
