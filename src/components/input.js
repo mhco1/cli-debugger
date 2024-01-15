@@ -4,6 +4,15 @@ import { Box, Text, useInput } from 'ink';
 const insertString = (t, tt, i = 0) => t.slice(0, i) + tt + t.slice(i);
 const removeString = (t, i = 0) => t.slice(0, i - 1) + t.slice(i);
 const splitString = (t, i = 0) => [t.slice(0, i), t.slice(i)];
+const spaceIndex = (t) => {
+    const res = [t.indexOf(' ')];
+
+    while (res[res.length - 1] !== -1) {
+        res.push(t.indexOf(' ', res[res.length - 1] + 1))
+    }
+
+    return res.slice(0, -1);
+};
 
 const Cursor = ({ k }) => {
 
@@ -54,17 +63,23 @@ export default ({ onSubmit, history }) => {
                 return 'end'
             },
             leftArrow() {
-                if (s.pos > 0) setS(s => ({
-                    ...s,
-                    pos: s.pos - 1
-                }))
+                if (s.pos > 0) setS(s => {
+                    let pos = (key.ctrl ? spaceIndex(s.txt).filter(el => el < s.pos).slice(-1)[0] : s.pos - 1) || 0;
+
+                    return {
+                        ...s, pos
+                    }
+                })
                 return 'end'
             },
             rightArrow() {
-                if (s.pos < s.txt.length) setS(s => ({
-                    ...s,
-                    pos: s.pos + 1
-                }))
+                if (s.pos < s.txt.length) setS(s => {
+                    const pos = (key.ctrl ? spaceIndex(s.txt).filter(el => el > s.pos).slice(0)[0] : s.pos + 1) || s.txt.length;
+
+                    return {
+                        ...s, pos
+                    }
+                })
                 return 'end'
             },
             return() {
@@ -87,7 +102,7 @@ export default ({ onSubmit, history }) => {
             },
         }
 
-        for (const cmd of Object.keys(exe)) if (key[cmd]) if (exe[cmd]() === 'end') return
+        for (const cmd of Object.keys(exe)) if (key[cmd]) if (exe[cmd]() === 'end') return;
 
         setS(s => {
             let txt = insertString(s.txt, input, s.pos);
