@@ -25,6 +25,18 @@ export default ({ onSubmit, history }) => {
 
     useInput((input, key) => {
         const exe = {
+            ctrl() {
+                if (input === 'u') {
+                    setS(s => ({
+                        ...s,
+                        txt: '',
+                        hist: ['', ...s.hist.slice(1)],
+                        pos: 0,
+                    }))
+
+                    return 'end'
+                }
+            },
             upArrow() {
                 if (s.histPos < s.hist.length - 1) setS(s => ({
                     ...s,
@@ -48,7 +60,7 @@ export default ({ onSubmit, history }) => {
                 }))
                 return 'end'
             },
-            rigthArrow() {
+            rightArrow() {
                 if (s.pos < s.txt.length) setS(s => ({
                     ...s,
                     pos: s.pos + 1
@@ -82,7 +94,7 @@ export default ({ onSubmit, history }) => {
             return {
                 ...s,
                 txt: txt,
-                pos: s.pos + 1,
+                pos: s.pos + input.length,
                 hist: [txt, ...s.hist.slice(1)],
                 histPos: 0
             }

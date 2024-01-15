@@ -6,10 +6,14 @@ import Input from '~/src/components/input.js';
 
 export default ({ }) => {
     const [res, setRes] = useState('');
+    const [value, setValue] = useState('')
 
     return <>
         <Box flexDirection="column">
             <Input onSubmit={input => setRes(input)} />
+            {/* <TextInput value={value} onChange={(v) => {
+                ksetValue(v)
+            }} onSubmit={(v) => setRes(v)} /> */}
             <Text>{res}</Text>
         </Box>
     </>
