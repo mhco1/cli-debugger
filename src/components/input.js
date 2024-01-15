@@ -16,7 +16,7 @@ export default ({ onSubmit, history }) => {
     const [s, setS] = useState({
         txt: '',
         pos: 0,
-        hist: Array.isArray(history) ? history : [],
+        hist: Array.isArray(history) ? ['', history] : [''],
         histPos: 0,
     });
 
@@ -24,36 +24,69 @@ export default ({ onSubmit, history }) => {
     const [k, txt2] = splitString(_txt2, 1);
 
     useInput((input, key) => {
+        const exe = {
+            upArrow() {
+                if (s.histPos < s.hist.length - 1) setS(s => ({
+                    ...s,
+                    txt: s.hist[s.histPos + 1],
+                    histPos: s.histPos + 1
+                }))
+                return 'end'
+            },
+            downArrow() {
+                if (s.histPos > 0) setS(s => ({
+                    ...s,
+                    txt: s.hist[s.histPos - 1],
+                    histPos: s.histPos - 1
+                }))
+                return 'end'
+            },
+            leftArrow() {
+                if (s.pos > 0) setS(s => ({
+                    ...s,
+                    pos: s.pos - 1
+                }))
+                return 'end'
+            },
+            rigthArrow() {
+                if (s.pos < s.txt.length) setS(s => ({
+                    ...s,
+                    pos: s.pos + 1
+                }))
+                return 'end'
+            },
+            return() {
+                onSubmit(s.txt);
+                setS(s => ({
+                    ...s,
+                    txt: '',
+                    pos: 0,
+                    hist: ['', ...s.hist]
+                }))
+                return 'end'
+            },
+            delete() {
+                if (s.pos > 0) setS(s => ({
+                    ...s,
+                    txt: removeString(s.txt, s.pos),
+                    pos: s.pos - 1,
+                }))
+                return 'end'
+            },
+        }
 
-        if (key.upArrow) return (s.histPos < s.hist.length - 1 && setS(s =>
-            ({ ...s, txt: s.hist[s.histPos + 1], histPos: s.histPos + 1 })
-        ));
+        for (const cmd of Object.keys(exe)) if (key[cmd]) if (exe[cmd]() === 'end') return
 
-        if (key.downArrow) return (s.histPos > 0 && setS(s =>
-            ({ ...s, txt: [s.txt, ...s.hist][s.histPos - 1], histPos: s.histPos - 1 })
-        ));
-
-        if (key.leftArrow) return (s.pos > 0 && setS(s =>
-            ({ ...s, pos: s.pos - 1 }))
-        );
-
-        if (key.rightArrow) return (s.pos < s.txt.length && setS((s) =>
-            ({ ...s, pos: s.pos + 1 }))
-        );
-
-        if (key.return) {
-            onSubmit(s.txt); return setS(s =>
-                ({ ...s, txt: '', pos: 0, hist: [s.txt, ...s.hist] })
-            )
-        };
-
-        if (key.delete) return (pos > 0 && setS(s => ({
-            ...s, txt: removeString(s.txt, s.pos), pos: s.pos - 1,
-        })));
-
-        setS(s => ({
-            ...s, txt: insertString(s.txt, input, s.pos), pos: s.pos + 1, histPos: 0
-        }));
+        setS(s => {
+            let txt = insertString(s.txt, input, s.pos);
+            return {
+                ...s,
+                txt: txt,
+                pos: s.pos + 1,
+                hist: [txt, ...s.hist.slice(1)],
+                histPos: 0
+            }
+        });
     })
 
     return <>
