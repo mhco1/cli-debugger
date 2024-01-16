@@ -1,50 +1,133 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Box, Text, useInput, useApp } from 'ink';
-import TextInput from 'ink-text-input';
-import uuid from '~/utils/uuid.js';
-import toPromise from '~/utils/toPromise.js';
-import { event } from '~/events/index.js';
-import { context } from '~/data.js';
-import Prompt from '~/components/repl_prompt.js';
+import React, { useState } from 'react';
+import { Box, Text, useInput } from 'ink';
 
-export default ({ setHistory }) => {
-    const { exit } = useApp();
-    const [script, setScript] = useState('');
-    const [name, setName] = useState('');
+const insertString = (t, tt, i = 0) => t.slice(0, i) + tt + t.slice(i);
+const removeString = (t, i = 0) => t.slice(0, i - 1) + t.slice(i);
+const splitString = (t, i = 0) => [t.slice(0, i), t.slice(i)];
+const reverse = (t) => t.split('').reverse().join('');
+const spaceIndex = (t) => {
+    const res = [t.indexOf(' ')];
 
-    const onSubmit = (name, script) => async () => {
-        const run = toPromise((fn) => event.emit('context_run', script, fn));
-        const data = await run();
-        setHistory(prev => [
-            ...prev,
-            <Box key={uuid()}>
-                <Prompt name={name} />
-                <Text>{script}</Text>
-            </Box>,
-            <Box key={uuid()}>
-                <Prompt name={name} />
-                <Text>{JSON.stringify(data)}</Text>
-            </Box>
-        ]);
-        setScript('');
+    while (res[res.length - 1] !== -1) {
+        res.push(t.indexOf(' ', res[res.length - 1] + 1))
     }
 
-    // useInput((input, key) => {
-    //     if (input == 'c' && key.ctrl) {
-    //         event.emit('exit');
-    //         exit();
-    //     }
-    // })
+    return res.slice(0, -1);
+};
 
-    useEffect(() => {
-        event.on('context_select', () => setName(context.now));
-    }, [])
+export default ({ onSubmit, history }) => {
+    const [s, setS] = useState({
+        txt: '',
+        pos: 0,
+        hist: Array.isArray(history) ? ['', history] : [''],
+        histPos: 0,
+    });
+
+    const [txt1, _txt2] = splitString(s.txt, s.pos);
+    const [k, txt2] = splitString(_txt2, 1);
+
+    useInput((input, key) => {
+        const exe = {
+            ctrl() {
+                if (input === 'u') {
+                    setS(s => ({
+                        ...s,
+                        txt: '',
+                        hist: ['', ...s.hist.slice(1)],
+                        pos: 0,
+                    }))
+
+                    return 'end'
+                }
+            },
+            upArrow() {
+                if (s.histPos < s.hist.length - 1) setS(s => ({
+                    ...s,
+                    txt: s.hist[s.histPos + 1],
+                    histPos: s.histPos + 1
+                }))
+                return 'end'
+            },
+            downArrow() {
+                if (s.histPos > 0) setS(s => ({
+                    ...s,
+                    txt: s.hist[s.histPos - 1],
+                    histPos: s.histPos - 1
+                }))
+                return 'end'
+            },
+            leftArrow() {
+                if (s.pos > 0) setS(s => {
+                    let pos = s.pos - 1;
+
+                    if (key.ctrl) {
+                        pos = reverse(s.txt).indexOf(' ', s.txt.length - s.pos);
+                        if (pos == -1) {
+                            pos = 0;
+                        } else {
+                            pos = s.txt.length - pos;
+                            --pos;
+                        }
+                    }
+
+                    return {
+                        ...s, pos
+                    }
+                })
+                return 'end'
+            },
+            rightArrow() {
+                if (s.pos < s.txt.length) setS(s => {
+                    let pos = s.pos + 1;
+
+                    if (key.ctrl) {
+                        pos = s.txt.indexOf(' ', s.pos + 1);
+                        if (pos == -1) {
+                            pos = s.txt.length;
+                        }
+                    }
+
+                    return {
+                        ...s, pos
+                    }
+                })
+                return 'end'
+            },
+            return() {
+                onSubmit(s.txt);
+                setS(s => ({
+                    ...s,
+                    txt: '',
+                    pos: 0,
+                    hist: ['', ...s.hist]
+                }))
+                return 'end'
+            },
+            delete() {
+                if (s.pos > 0) setS(s => ({
+                    ...s,
+                    txt: removeString(s.txt, s.pos),
+                    pos: s.pos - 1,
+                }))
+                return 'end'
+            },
+        }
+
+        for (const cmd of Object.keys(exe)) if (key[cmd]) if (exe[cmd]() === 'end') return;
+
+        setS(s => {
+            let txt = insertString(s.txt, input, s.pos);
+            return {
+                ...s,
+                txt: txt,
+                pos: s.pos + input.length,
+                hist: [txt, ...s.hist.slice(1)],
+                histPos: 0
+            }
+        });
+    })
 
     return <>
-        <Box>
-            <Prompt name={name} />
-            <TextInput value={script} onChange={setScript} onSubmit={onSubmit(name, script)} />
-        </Box>
+        <Text>{txt1}<Cursor k={k} />{txt2}</Text>
     </>
 }
