@@ -4,6 +4,7 @@ import { Box, Text, useInput } from 'ink';
 const insertString = (t, tt, i = 0) => t.slice(0, i) + tt + t.slice(i);
 const removeString = (t, i = 0) => t.slice(0, i - 1) + t.slice(i);
 const splitString = (t, i = 0) => [t.slice(0, i), t.slice(i)];
+const reverse = (t) => t.split('').reverse().join('');
 const spaceIndex = (t) => {
     const res = [t.indexOf(' ')];
 
@@ -64,7 +65,17 @@ export default ({ onSubmit, history }) => {
             },
             leftArrow() {
                 if (s.pos > 0) setS(s => {
-                    let pos = (key.ctrl ? spaceIndex(s.txt).filter(el => el < s.pos).slice(-1)[0] : s.pos - 1) || 0;
+                    let pos = s.pos - 1;
+
+                    if (key.ctrl) {
+                        pos = reverse(s.txt).indexOf(' ', s.txt.length - s.pos);
+                        if (pos == -1) {
+                            pos = 0;
+                        } else {
+                            pos = s.txt.length - pos;
+                            --pos;
+                        }
+                    }
 
                     return {
                         ...s, pos
@@ -74,7 +85,14 @@ export default ({ onSubmit, history }) => {
             },
             rightArrow() {
                 if (s.pos < s.txt.length) setS(s => {
-                    const pos = (key.ctrl ? spaceIndex(s.txt).filter(el => el > s.pos).slice(0)[0] : s.pos + 1) || s.txt.length;
+                    let pos = s.pos + 1;
+
+                    if (key.ctrl) {
+                        pos = s.txt.indexOf(' ', s.pos + 1);
+                        if (pos == -1) {
+                            pos = s.txt.length;
+                        }
+                    }
 
                     return {
                         ...s, pos
