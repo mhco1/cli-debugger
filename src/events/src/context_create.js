@@ -1,14 +1,14 @@
-import childProcess from 'node:child_process';
-import path from 'node:path';
-import uuid from '~/utils/uuid.js';
-import { context } from '~/data.js';
+import childProcess from 'child_process';
+import path from 'path';
+import { uuid } from '/utils';
+import { context } from '/data';
 import { is, has } from '../test.js';
 
-export default (name) => {
+export const _ = (name) => {
     if (!is.context.validFormat(name)) throw Error('Invalid format to new context');
     if (has.context(name)) throw Error('There is already a context with this name');
 
-    const dir = path.resolve(process.env.ROOT, 'dist/server.js');
+    const dir = path.resolve('./dist/server.js');
     const node = childProcess.fork(dir, {
         env: {
             NAME: name,
@@ -17,11 +17,15 @@ export default (name) => {
 
     const requests = {};
     context.c[name] = {
+        name,
         node,
-        history: [],
+        history: [
+            ''
+            //{srcipt, uuid, data}
+        ],
 
         send: (exe, data) => new Promise((resolve, reject) => {
-            const id = uuid();
+            const id = uuid._();
             requests[id] = (err, res) => err ? reject(err) : resolve(res);
             node.send({ exe, id, data });
         }),

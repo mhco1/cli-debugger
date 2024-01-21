@@ -1,7 +1,7 @@
 import { has } from '../test.js';
-import { context } from '~/data.js';
+import { context } from '/data';
 
-export default (name) => {
+export const _ =  (name) => {
     if (!has.context(name)) throw Error('Context not defined');
     context.now = name;
 }

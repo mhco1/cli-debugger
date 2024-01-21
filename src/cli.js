@@ -2,9 +2,10 @@
 
 import 'dotenv/config';
 import React from 'react';
-import {render} from 'ink';
+import { render } from 'ink';
 import meow from 'meow';
-import App from '~/src/app.js';
+import App from '/src/app.js';
+import { event } from '/events';
 
 const cli = meow(
 	`
@@ -23,4 +24,8 @@ const cli = meow(
 	},
 );
 
-render(<App {...cli.flags} />);
+const { waitUntilExit } = render(<App {...cli.flags} />)
+
+waitUntilExit().then(() => {
+	event.emit('exit');
+})

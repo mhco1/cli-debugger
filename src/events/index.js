@@ -1,11 +1,10 @@
-import { EventEmitter } from 'node:events'
-import * as events from './events/index.js'
+import { EventEmitter } from 'events';
+import * as mod from './src/*.js';
 
-const event = new EventEmitter;
+export const event = new EventEmitter;
 
-Object.keys(events).forEach(name => {
-    const fn = (events[name]).default;
+Object.keys(mod).forEach(name => {
+    if (typeof mod[name]._ == 'undefined') return
+    const fn = mod[name]._;
     event.on(name, fn);
 })
-
-export { event }

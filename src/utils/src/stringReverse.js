@@ -1,0 +1,1 @@
+export const _ = (t) => t.split('').reverse().join('');

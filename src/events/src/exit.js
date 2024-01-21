@@ -1,6 +1,6 @@
-import { context } from '~/data.js'
+import { context } from '/data'
 
-export default () => {
+export const _ = () => {
     for (const key in context.c) {
         context.c[key].node.kill();
     }

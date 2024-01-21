@@ -15,7 +15,21 @@
 			"isLibrary": true,
 			"optimize": false,
 			"includeNodeModules": false
+		},
+		"server": {
+			"source": "src/server.js",
+			"context": "node",
+			"outputFormat": "esmodule",
+			"isLibrary": true,
+			"optimize": false,
+			"includeNodeModules": false
 		}
+	},
+	"alias":{
+		"./data": "./src/data.js",
+		"./utils": "./src/utils/index.js",
+		"./components": "./src/components/index.js",
+		"./events": "./src/events/index.js"
 	},
 	"scripts": {
 		"clearAll": "rm -r ./.parcel-cache ./dist",

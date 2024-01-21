@@ -1,4 +1,4 @@
-import { context } from '~/data.js'
+import { context } from '/data'
 
 export const has = {
     context: (v) => context.c.hasOwnProperty(v),
