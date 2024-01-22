@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { isValidElement } from 'react';
 import { Box, Text, useApp } from 'ink';
 import { Input } from '/components';
 
@@ -30,14 +30,14 @@ export const _ = {
                             <Arrow name={name} />
                             <Text>{children}</Text>
                         </> :
-                        typeof children == 'object' ?
+                        isValidElement(children) ?
+                            children :
                             <>
                                 <Arrow name={name} />
                                 <Text>{
                                     String(JSON.stringify(children))
                                 }</Text>
-                            </> :
-                            children
+                            </>
                 }
             </Box>
         </>

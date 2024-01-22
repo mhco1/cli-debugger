@@ -34,7 +34,7 @@
 	"scripts": {
 		"clearAll": "rm -r ./.parcel-cache ./dist",
 		"clear": "rm -r ./dist",
-		"start": "dist/cli.js",
+		"start": "dist/cli.js --enable-source-maps",
 		"build": "parcel build",
 		"watch": "parcel watch",
 		"test": "prettier --check . && xo && ava"

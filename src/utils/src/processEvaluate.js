@@ -10,11 +10,8 @@ export const _ = async (evaluate, { send }) => {
 
         if (evaluate.type == 'object') {
             res.type = evaluate.subtype == 'array' ? 'array' : 'object';
-            res.props = [];
-
-            props.forEach(({ name, value }) => {
-                res.props.push(
-                    /string|number|boolean/g.test(value.type) ?
+            res.props = props.map(({ name, value }) => (
+                /string|number|boolean/g.test(value.type) ?
                         { type: 'value', name, value: value.value } :
                         value.type == 'object' ?
                             value.subtype == 'array' ?
@@ -23,8 +20,7 @@ export const _ = async (evaluate, { send }) => {
                             value.type == 'function' ?
                                 { type: 'function', name } :
                                 undefined
-                )
-            })
+            ))
 
             return res
         }

@@ -4,7 +4,7 @@ import { Box } from 'ink';
 import * as data from '/data';
 import { event } from '/events';
 import { uuid, toPromise } from '/utils';
-import { Prompt } from '/components';
+import { Prompt, RenderData } from '/components';
 
 export const _ = ({ }) => {
     const [context, setContext] = useState();
@@ -15,7 +15,7 @@ export const _ = ({ }) => {
                 {script}
             </Prompt._.Log>
             <Prompt._.Log name={context.name}>
-                {data}
+                <RenderData._ data={data} />
             </Prompt._.Log>
         </Box>
     </>
