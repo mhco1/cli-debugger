@@ -6,9 +6,9 @@ export default ({ }) => {
 
     return <>
         <Box flexDirection="column">
-            {/* <Start._ /> */}
-            {/* <Repl._ /> */}
-            <ObjectNavegation._  />
+            <Start._ />
+            <Repl._ />
+            {/* <ObjectNavegation._  /> */}
         </Box>
     </>
 }

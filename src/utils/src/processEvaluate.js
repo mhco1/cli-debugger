@@ -1,7 +1,11 @@
 export const _ = async (evaluate, { send }) => {
 
-    if (/string|number|boolean/g.test(evaluate.type)) return {
-        type: 'value', value: evaluate.value
+    if (evaluate.className == 'ReferenceError') return {
+        type:'error', value: evaluate.description
+    }
+
+    if (typeof type === 'undefined' || /string|number|boolean/g.test(evaluate.type)) return {
+        type: 'value', value: evaluate.value || ''
     };
 
     if (/function|object/g.test(evaluate.type)) {
