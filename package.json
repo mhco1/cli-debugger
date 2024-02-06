@@ -35,6 +35,7 @@
 		"clearAll": "rm -r ./.parcel-cache ./dist",
 		"clear": "rm -r ./dist",
 		"start": "dist/cli.js --enable-source-maps",
+		"debugger": "dist/cli.js --enable-source-maps --debugger",
 		"build": "parcel build",
 		"watch": "parcel watch",
 		"test": "prettier --check . && xo && ava"

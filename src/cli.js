@@ -3,28 +3,13 @@
 import 'dotenv/config';
 import React from 'react';
 import { render } from 'ink';
-import meow from 'meow';
-import App from '/src/app.js';
 import { event } from '/events';
+import cli from '/src/cli.conf.js'
+import App from '/src/App.js';
+import AppTest from '/src/App.test.js';
 
-const cli = meow(
-	`
-		Usage
-		  $ cli-debugger
-
-		Options
-			--name  Your name
-
-		Examples
-		  $ cli-debugger --name=Jane
-		  Hello, Jane
-	`,
-	{
-		importMeta: import.meta,
-	},
-);
-
-const { waitUntilExit } = render(<App {...cli.flags} />)
+console.log(cli.flags.debugger)
+const { waitUntilExit } = render(cli.flags.debugger ? <AppTest /> : <App />);
 
 waitUntilExit().then(() => {
 	event.emit('exit');
