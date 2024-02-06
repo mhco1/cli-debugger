@@ -9,7 +9,7 @@ import App from '/src/App.js';
 import AppTest from '/src/App.test.js';
 
 console.log(cli.flags.debugger)
-const { waitUntilExit } = render(cli.flags.debugger ? <AppTest /> : <App />);
+const { waitUntilExit } = render(cli.flags.experiment ? <AppTest /> : <App />);
 
 waitUntilExit().then(() => {
 	event.emit('exit');

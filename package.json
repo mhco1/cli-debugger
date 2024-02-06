@@ -26,16 +26,20 @@
 		}
 	},
 	"alias": {
+		"./events": "./src/events/index.js",
 		"./data": "./src/data.js",
 		"./utils": "./src/utils/index.js",
 		"./components": "./src/components/index.js",
-		"./events": "./src/events/index.js"
+
+		"./events.test": "./src/events/index.js",
+		"./utils.test": "./src/utils/index.js",
+		"./components.test": "./src/components/index.js"
 	},
 	"scripts": {
 		"clearAll": "rm -r ./.parcel-cache ./dist",
 		"clear": "rm -r ./dist",
 		"start": "dist/cli.js --enable-source-maps",
-		"debugger": "dist/cli.js --enable-source-maps --debugger",
+		"experiment": "dist/cli.js --enable-source-maps --experiment",
 		"build": "parcel build",
 		"watch": "parcel watch",
 		"test": "prettier --check . && xo && ava"
