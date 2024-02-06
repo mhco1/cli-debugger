@@ -1,11 +1,11 @@
 export const _ = async (evaluate, { send }) => {
 
     if (evaluate.className == 'ReferenceError') return {
-        type:'error', value: evaluate.description
+        type: 'error', value: evaluate.description,
     }
 
     if (typeof type === 'undefined' || /string|number|boolean/g.test(evaluate.type)) return {
-        type: 'value', value: evaluate.value || ''
+        type: 'value', value: evaluate.value || '',
     };
 
     if (/function|object/g.test(evaluate.type)) {
@@ -16,14 +16,14 @@ export const _ = async (evaluate, { send }) => {
             res.type = evaluate.subtype == 'array' ? 'array' : 'object';
             res.props = props.map(({ name, value }) => (
                 /string|number|boolean/g.test(value.type) ?
-                        { type: 'value', name, value: value.value } :
-                        value.type == 'object' ?
-                            value.subtype == 'array' ?
-                                { type: 'array', name } :
-                                { type: 'object', name } :
-                            value.type == 'function' ?
-                                { type: 'function', name } :
-                                undefined
+                    { type: 'value', name, value: value.value } :
+                    value.type == 'object' ?
+                        value.subtype == 'array' ?
+                            { type: 'array', name } :
+                            { type: 'object', name } :
+                        value.type == 'function' ?
+                            { type: 'function', name } :
+                            undefined
             ))
 
             return res

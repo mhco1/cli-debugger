@@ -48,7 +48,7 @@ export const _ = ({ }) => {
         event.on('context_select', () => {
             const { c, now } = data.context;
 
-            if (context ?? false) {
+            if (typeof context !== 'undefined') {
                 const { name, history } = context;
                 c[name].history = history;
             }
