@@ -1,10 +1,11 @@
 import React, { isValidElement } from 'react';
 import { Box, Text, useApp } from 'ink';
 import { Input } from '/components';
+import { codes } from '/data';
 
 const Arrow = ({ name }) => <>
     <Box marginRight={1}>
-        <Text color='#0000ff'>{`${name} >`}</Text>
+        <Text color='#0000ff'>{`${name} ${codes.arrow.rigth}`}</Text>
     </Box>
 </>
 
