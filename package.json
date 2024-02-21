@@ -29,9 +29,11 @@
 		"./events": "./src/events/index.js",
 		"./data": "./src/data.js",
 		"./utils": "./src/utils/index.js",
+		"./hooks": "./src/hooks/index.js",
 		"./components": "./src/components/index.js",
 		"./events.test": "./src/test/events/index.js",
 		"./utils.test": "./src/test/utils/index.js",
+		"./hooks.test": "./src/test/hooks/index.js",
 		"./components.test": "./src/test/components/index.js"
 	},
 	"scripts": {
