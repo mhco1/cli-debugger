@@ -4,7 +4,7 @@ import { uuid } from '/utils';
 import { context } from '/data';
 import { is, has } from '../test.js';
 
-export const _ = (name) => {
+export const _ = (name, op = {}) => {
     if (!is.context.validFormat(name)) throw Error('Invalid format to new context');
     if (has.context(name)) throw Error('There is already a context with this name');
 
@@ -17,13 +17,9 @@ export const _ = (name) => {
 
     const requests = {};
     context.c[name] = {
+        ...op,
         name,
         node,
-        history: [
-            ''
-            //{srcipt, uuid, data}
-        ],
-
         send: (exe, data) => new Promise((resolve, reject) => {
             const id = uuid._();
             requests[id] = (err, res) => err ? reject(err) : resolve(res);
