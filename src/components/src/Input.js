@@ -1,130 +1,125 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Text, useInput } from 'ink';
+import { } from '@inkjs/ui';
 import { stringInsert, stringRemove, stringSplit, stringReverse } from '/utils';
 
-// { script, data, uuid: uuid._() }
+const armInit = {
+    pos: 0,
+    txt: '',
+};
 
-let storage;
+const stringGetPosToNextSymbol = (str, pos = 0, reverse = false) => {
+    const arrPos = str
+        .split(/[A-z0-9]/g)
+        .map(el => el.length > 0 ? [...el.split(''), ''] : [''])
+        .flat()
+        .map((el, id) => el.length > 0 && id)
+        .filter(el => el !== false);
+    const nextPos = arrPos[reverse ? 'findLast' : 'find'](
+        el => reverse ? el < pos : el > pos
+    );
+    return nextPos || -1;
+}
 
-const Cursor = ({ k }) => <Text inverse={true}>{k.length == 0 ? ' ' : k}</Text>
-
-export const _ = ({ name, onSubmit, history, setHistory }) => {
-    const [pos, setPos] = useState({ t: 0, h: 0 });
-
-    const txt = history[0];
-    const [txt1, _txt2] = stringSplit._(txt, pos.t);
+const txtSplit = (txt, pos) => {
+    const [txt1, _txt2] = stringSplit._(txt, pos);
     const [k, txt2] = stringSplit._(_txt2, 1);
+    return [txt1, txt2, k]
+}
 
-    const setPos2 = (t) => (h) => {
-        const analyse = (v, pre) =>
-            typeof v !== 'undefined' ?
-                Array.isArray(v) ?
-                    v[0] === '+' ?
-                        pre + v[1] :
-                        v[0] === '-' ?
-                            pre - v[1] :
-                            undefined :
-                    v :
-                undefined;
-        t = analyse(t, pos.t);
-        h = analyse(h, pos.h);
-        if (
-            typeof t !== 'undefined' ||
-            typeof h !== 'undefined'
-        ) {
-            setPos({
-                t: t ?? pos.t,
-                h: h ?? pos.h,
-            })
-        }
-    }
+const isHistoryEnabled = (hist) => {
+    return (
+        typeof hist === 'object' &&
+        !Array.isArray(hist) &&
+        Object.keys(hist).filter(el => ['up', 'down'].includes(el)).length > 0
+    )
+}
+
+const Cursor = ({ k }) => <Text inverse={true}>{k.length == 0 ? ' ' : k}</Text>;
+
+export const _ = ({ onSubmit, value, onHistory }) => {
+    const [arm, setArm] = useState(armInit);
+    const { txt, pos } = arm;
+    const [txt1, txt2, k] = txtSplit(txt, pos);
+    const historyEnabled = isHistoryEnabled(onHistory);
 
     useInput(async (input, key) => {
         const exe = {
             ctrl() {
                 if (input === 'u') {
-                    setHistory('');
-                    setPos2(0)();
+                    setArm({ ...armInit });
                     return 'end'
                 }
             },
             upArrow() {
-                if (pos.h === 0) {
-                    storage = txt;
-                }
-                if (pos.h < history.length - 1) {
-                    const _txt = history[pos.h + 1];
-                    setHistory(_txt);
-                    setPos2(_txt.length)(['+', 1]);
-                };
+                if (historyEnabled) onHistory.up(arm.txt);
                 return 'end'
             },
             downArrow() {
-                if (pos.h > 0) {
-                    let _txt;
-                    if (pos.h === 1) {
-                        _txt = storage;
-                    } else {
-                        _txt = history[pos.h - 1];
-                    }
-                    setHistory(_txt);
-                    setPos2(_txt.length)(['-', 1]);
-                };
+                if (historyEnabled) onHistory.down(arm.txt);
                 return 'end'
             },
             leftArrow() {
-                if (pos.t > 0) {
-                    let p = pos.t - 1;
+                if (pos > 0) {
+                    let p = pos - 1;
 
                     if (key.ctrl) {
-                        p = stringReverse._(txt).indexOf(' ', txt.length - pos.t);
+                        p = stringGetPosToNextSymbol(txt, pos, true);
                         if (p == -1) {
                             p = 0;
-                        } else {
-                            p = txt.length - p - 1;
                         }
                     }
 
-                    setPos2(p)();
+                    arm.pos = p;
+                    setArm({ ...arm });
                 }
 
                 return 'end'
             },
             rightArrow() {
-                if (pos.t < txt.length) {
-                    let p = pos.t + 1;
+                if (pos < txt.length) {
+                    let p = pos + 1;
 
                     if (key.ctrl) {
-                        p = txt.indexOf(' ', pos.t + 1);
+                        p = stringGetPosToNextSymbol(txt, pos + 1);
                         if (p == -1) {
                             p = txt.length;
                         }
                     }
 
-                    setPos2(p)();
+                    arm.pos = p;
+                    setArm({ ...arm });
                 }
 
                 return 'end'
             },
             async return() {
                 await onSubmit(txt);
-                setPos2(0)(0);
+                setArm({ ...armInit });
                 return 'end'
             },
             delete() {
-                if (pos.t > 0) {
-                    setHistory(stringRemove._(txt, pos.t));
-                    setPos2(['-', 1])();
+                if (pos > 0) {
+                    arm.txt = stringRemove._(txt, pos);
+                    arm.pos = pos - 1;
+                    setArm({ ...arm });
                 }
                 return 'end'
             },
-        }
+        };
 
         for (const cmd of Object.keys(exe)) if (key[cmd]) if (await exe[cmd]() === 'end') return;
 
-        setHistory(stringInsert._(txt, input, pos.t));
-        setPos2(['+', input.length])();
+        arm.txt = stringInsert._(txt, input, pos);
+        arm.pos = pos + input.length
+        setArm({ ...arm });
     })
+
+    useEffect(() => {
+        arm.pos = value.length;
+        arm.txt = value;
+        setArm({ ...arm });
+    }, [value]);
 
     return <>
         <Box>

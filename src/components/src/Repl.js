@@ -1,67 +1,29 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { } from 'react';
 import { Box } from 'ink';
-import * as data from '/data';
+import { } from '@inkjs/ui';
 import { event } from '/events';
-import { uuid, toPromise } from '/utils';
-import { Prompt, RenderData } from '/components';
+import { toPromise } from '/utils'
+import { Input, Hist, Arrow } from '/components';
+import { useHistory, useContext } from '/hooks';
 
 export const _ = ({ }) => {
-    const [context, setContext] = useState();
+    const myContext = useContext._();
+    const [context, setContext] = myContext;
+    const [value, hist, handleHist] = useHistory._(myContext, Hist._, 'script');
 
-    const History = ({ script, data }) => <>
-        <Box flexDirection="column">
-            <Prompt._.Log name={context.name}>
-                {script}
-            </Prompt._.Log>
-            <Prompt._.Log name={context.name}>
-                <RenderData._ data={data} />
-            </Prompt._.Log>
-        </Box>
-    </>
-
-    const getHistory = () => [context.history[0], ...context.history.slice(1).map(el => el.script).reverse()];
-
-    const setHistory = (txt) => {
-        setContext({
-            ...context,
-            history: [txt, ...context.history.slice(1)],
-        })
-    }
-
-    const onSubmit = async (script) => {
+    const handleSubmit = async (script) => {
         const run = toPromise._((fn) => event.emit('context_run', script, fn));
-        const data = await run();
-
-        setContext({
-            ...context,
-            history: [
-                '',
-                ...context.history.slice(1),
-                { script, data, uuid: uuid._() },
-            ]
-        })
+        const data = (await run()).value;
+        handleHist.add({ script, data, name: context.name });
     }
-
-    useEffect(() => {
-        event.emit('context_create', 'context');
-        event.on('context_select', () => {
-            const { c, now } = data.context;
-
-            if (typeof context !== 'undefined') {
-                const { name, history } = context;
-                c[name].history = history;
-            }
-
-            setContext(c[now]);
-        });
-        event.emit('context_select', 'context');
-    }, [])
-
-    if (typeof context == 'undefined') return <></>
 
     return <>
-        {context.history.slice(1).map(el => <History key={el.uuid} {...el} />)}
-        <Prompt._.Input name={context.name} onSubmit={onSubmit} history={getHistory()} setHistory={setHistory} />
+        <Box flexDirection='column'>
+            {...hist.comp}
+            <Box>
+                <Arrow._ name={context.name} />
+                <Input._ onSubmit={handleSubmit} onHistory={handleHist} value={value} />
+            </Box>
+        </Box>
     </>
 }
