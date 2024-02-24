@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
-// import { Cursor } from '/components';
 import { stringInsert, stringRemove, stringSplit, stringReverse } from '/utils';
 
 // { script, data, uuid: uuid._() }
