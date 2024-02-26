@@ -10,7 +10,7 @@ const armInit = {
 
 export const _ = ([context, setContext], Comp, valueKey = 'value') => {
     const [arm, setArm] = useState(armInit);
-    const { hist } = context;
+    const { hist, name } = context;
     const { pos, value } = arm;
 
     const getValue = () => pos > -1 ? hist.list[pos][valueKey] : value;
@@ -45,6 +45,9 @@ export const _ = ([context, setContext], Comp, valueKey = 'value') => {
             arm.pos = -1;
             setContext({ ...context });
             setArm({ ...arm });
+        },
+        getLast(){
+            return context.hist.list.slice(-1)[0] || { name };
         }
     }
 
