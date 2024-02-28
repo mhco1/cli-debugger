@@ -92,7 +92,7 @@ const back = {
     },
 }
 
-export const _ = ({ onSubmit, items, event }) => {
+export const _ = ({ onSubmit=()=>{}, items, event }) => {
     let handleToExecute;
     const [disable, setDisable] = useState();
     const [op, setOp] = useState(processItems(items));
@@ -116,9 +116,11 @@ export const _ = ({ onSubmit, items, event }) => {
     })
 
     useEffect(() => {
-        event.on('menu_active', (active) => {
-            setDisable(active ? undefined : true);
-        })
+        if (typeof event !== 'undefined') {
+            event.on('menu_active', (active) => {
+                setDisable(active ? undefined : true);
+            })
+        }
     }, [])
 
     return <>

@@ -4,7 +4,7 @@ export const _ = async (evaluate, { send }) => {
         type: 'error', value: evaluate.description,
     }
 
-    if (typeof type === 'undefined' || /string|number|boolean/g.test(evaluate.type)) return {
+    if (typeof evaluate.type === 'undefined' || /string|number|boolean/g.test(evaluate.type)) return {
         type: 'value', value: evaluate.value || '',
     };
 

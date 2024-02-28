@@ -47,7 +47,7 @@ export const _ = ([context, setContext], Comp, valueKey = 'value') => {
             setArm({ ...arm });
         },
         getLast(){
-            return context.hist.list.slice(-1)[0] || { name };
+            return context.hist.list[0] || { name };
         }
     }
 
