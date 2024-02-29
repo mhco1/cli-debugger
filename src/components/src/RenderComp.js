@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Text } from 'ink';
 import { EventEmitter } from 'events';
 import { Input as _Input, Arrow, Menu } from '/components';
 
+const eventToHist = new EventEmitter;
 
 const Context = ({ name, script }) => <>
     <Box>
@@ -11,18 +12,13 @@ const Context = ({ name, script }) => <>
     </Box>
 </>
 
-const Default = ({ name, handles, value }) => {
-    const [handleSubmit, handleHist] = handles;
-
-    return <>
-        <Box>
-            <Arrow._ name={name} />
-            <_Input._ onSubmit={handleSubmit} onHistory={handleHist} value={value} />
-        </Box>
-    </>
+const useCheckValueChange = (value, callback = () => { }) => {
+    const storeValue = useRef();
+    const res = typeof storeValue === 'undefined' || storeValue !== 'value';
+    if (res) callback();
+    storeValue.current = value;
+    return res;
 }
-
-const eventToHist = new EventEmitter;
 
 export const Hist = (props) => {
     const { script, data, name } = props
@@ -71,17 +67,21 @@ export const Hist = (props) => {
 }
 
 export const Input = (props) => {
-    const { handles, value } = props;
+    const Data = useRef();
+    const { handles, value, stateTypeRender } = props;
+    const [typeRender, setTypeRender] = stateTypeRender;
     const [handleSubmit, handleHist] = handles;
     const lastProps = handleHist.getLast();
     const { script, data, name } = lastProps;
-    const Def = () => <Default {...{ name, ...props }} />;
 
     const types = {
-        value: Def,
-        error: Def,
+        default: () => <>
+            <Box>
+                <Arrow._ name={name} />
+                <_Input._ onSubmit={handleSubmit} onHistory={handleHist} value={value} />
+            </Box>
+        </>,
         object: () => {
-            const [isDef, setIsDef] = useState(false);
 
             const items = data.props.map(el => ({
                 label: `${el.name}: ${el.value}`, value: el
@@ -89,25 +89,22 @@ export const Input = (props) => {
 
             const onSubmit = (data) => {
                 eventToHist.emit('object', { script, data: data[1], name });
-                setIsDef(true);
+                setTypeRender('default');
+
             }
 
+
             return <>
-                {
-                    isDef ?
-                        <Def /> :
-                        <Menu._ items={items} onSubmit={onSubmit} />
-                }
+                <Menu._ items={items} onSubmit={onSubmit} />
             </>
         }
     };
 
-    // types.error = types.value;
-
-    // const inputType = ['value', 'error'].includes(data.type) ? 'value' : '';
-    const Data = typeof data !== 'undefined' ? types[data.type] : types.value;
+    useCheckValueChange(typeRender, () => {
+        Data.current = types[typeRender];
+    })
 
     return <>
-        <Data />
+        <Data.current />
     </>
 }
