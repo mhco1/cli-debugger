@@ -41,8 +41,8 @@ export const Hist = (props) => {
                 eventToHist.on('object', res => {
                     arm.isContent = true;
                     arm.res = res;
-                    eventToHist.removeAllListeners('object');
                     setArm({ ...arm });
+                    eventToHist.removeAllListeners('object');
                 })
             }, [])
 
@@ -74,15 +74,21 @@ export const Input = (props) => {
     const lastProps = handleHist.getLast();
     const { script, data, name } = lastProps;
 
+    const _handleSubmit = async (...args) => {
+        const newTypeRender = await handleSubmit(...args);
+        if (typeRender !== newTypeRender) setTypeRender(
+            newTypeRender in types ? newTypeRender : 'default'
+        );
+    }
+
     const types = {
         default: () => <>
             <Box>
                 <Arrow._ name={name} />
-                <_Input._ onSubmit={handleSubmit} onHistory={handleHist} value={value} />
+                <_Input._ onSubmit={_handleSubmit} onHistory={handleHist} value={value} />
             </Box>
         </>,
         object: () => {
-
             const items = data.props.map(el => ({
                 label: `${el.name}: ${el.value}`, value: el
             }));
@@ -90,9 +96,7 @@ export const Input = (props) => {
             const onSubmit = (data) => {
                 eventToHist.emit('object', { script, data: data[1], name });
                 setTypeRender('default');
-
             }
-
 
             return <>
                 <Menu._ items={items} onSubmit={onSubmit} />
