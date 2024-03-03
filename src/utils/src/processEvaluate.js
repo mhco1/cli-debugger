@@ -20,10 +20,10 @@ export const _ = async (evaluate, { send }) => {
                     value.type == 'object' ?
                         value.subtype == 'array' ?
                             { type: 'array', name } :
-                            { type: 'object', name } :
+                            { type: 'object', name, id: value.objectId } :
                         value.type == 'function' ?
                             { type: 'function', name } :
-                            undefined
+                            {}
             ))
 
             return res

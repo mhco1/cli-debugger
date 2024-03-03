@@ -3,7 +3,7 @@ import { Box } from 'ink';
 import { } from '@inkjs/ui';
 import { event } from '/events';
 import { toPromise } from '/utils'
-import { Input, RenderComp, Arrow } from '/components';
+import { RenderComp } from '/components';
 import { useHistory, useContext } from '/hooks';
 
 export const _ = ({ }) => {
@@ -25,6 +25,7 @@ export const _ = ({ }) => {
             <RenderComp.Input
                 handles={[handleSubmit, handleHist]}
                 value={value}
+                context={context}
                 stateTypeRender={stateTypeRender}
             />
         </Box>
