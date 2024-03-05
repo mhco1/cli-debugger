@@ -10,7 +10,7 @@ export const _ = ({ }) => {
     const myContext = useContext._();
     const [context, setContext] = myContext;
     const stateTypeRender = useState('default');
-    const [value, hist, handleHist] = useHistory._(myContext, RenderComp.Hist, 'script');
+    const [value, hist, handleHist] = useHistory._(myContext, RenderComp.Hist._, 'script');
 
     const handleSubmit = async (script) => {
         const run = toPromise._((fn) => event.emit('context_run', script, fn));
@@ -22,7 +22,7 @@ export const _ = ({ }) => {
     return <>
         <Box flexDirection='column'>
             {...hist.comp}
-            <RenderComp.Input
+            <RenderComp.Input._
                 handles={[handleSubmit, handleHist]}
                 value={value}
                 context={context}

@@ -5,21 +5,36 @@ import { event } from '/events';
 import { Input as _Input, Arrow, Menu } from '/components';
 import { useValueChange } from '/hooks';
 
+const useRender = (Comp, types, stateTypeRender) => {
+    const [typeRender, setTypeRender] = stateTypeRender;
+
+    const op = {
+        defineType(newTypeRender) {
+            const _newTypeRender = newTypeRender in types ? newTypeRender : 'default'
+            if (typeRender !== _newTypeRender) setTypeRender(_newTypeRender);
+        },
+        checkValue() {
+            useValueChange._(typeRender, () => {
+                Comp.current = types[typeRender];
+            })
+        }
+    }
+
+    return op;
+}
 
 export const _ = (props) => {
     const Data = useRef();
     const { handles, value, stateTypeRender, context } = props;
     // const {send} = context;
-    const [typeRender, setTypeRender] = stateTypeRender;
+    // const [typeRender, setTypeRender] = stateTypeRender;
     const [handleSubmit, handleHist] = handles;
     const lastProps = handleHist.getLast();
     const { script, data, name } = lastProps;
 
     const _handleSubmit = async (...args) => {
         const newTypeRender = await handleSubmit(...args);
-        if (typeRender !== newTypeRender) setTypeRender(
-            newTypeRender in types ? newTypeRender : 'default'
-        );
+        renderOptions.defineType(newTypeRender);
     }
 
     const types = {
@@ -50,7 +65,7 @@ export const _ = (props) => {
             const onSubmit = (_data) => {
                 const [pos, data] = _data;
                 event.emit('RenderComp_objectSelect', { script, data, name });
-                if (data.type !== 'object') setTypeRender('default');
+                renderOptions.defineType(data.type);
             }
 
             return <>
@@ -59,9 +74,8 @@ export const _ = (props) => {
         }
     };
 
-    useValueChange._(typeRender, () => {
-        Data.current = types[typeRender];
-    })
+    const renderOptions = useRender(Data, types, stateTypeRender);
+    renderOptions.checkValue();
 
     return <>
         <Data.current />

@@ -1,6 +1,3 @@
-import React, { } from 'react';
-import { Input as _Input, Arrow, Menu } from '/components';
-import { RenderCompHist, RenderCompInput } from '/components';
-
-export const Hist = RenderCompHist._;
-export const Input = RenderCompInput._;
+// import React, { } from 'react';
+import { RenderCompHist as Hist, RenderCompInput as Input } from '/components';
+export { Hist, Input }
