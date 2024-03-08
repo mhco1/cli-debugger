@@ -92,7 +92,7 @@ const back = {
     },
 }
 
-export const _ = ({ onSubmit=()=>{}, items, event }) => {
+export const _ = ({ onSubmit = () => { }, items }) => {
     let handleToExecute;
     const [disable, setDisable] = useState();
     const [op, setOp] = useState(processItems(items));
@@ -100,11 +100,32 @@ export const _ = ({ onSubmit=()=>{}, items, event }) => {
     const handleItem = (item) => {
         const has = (prop) => Object.hasOwn(item, prop);
 
+        const setSubmenu = (submenu) => {
+            const { label, data } = !Array.isArray(submenu) ? submenu : { label: item.label, data: submenu }
+            setOp(processItems([back, ...data], label, op));
+            return
+        }
+
         if (has('_')) {
             if (item._.back) return setOp(removeItems(op));
         }
-        if (has('submenu')) return setOp(processItems([back, ...item.submenu], item.label, op));
-        if (has('execute')) return setOp(processItems([back, ...item.execute()], item.label, op));
+        if (has('submenu')) {
+            return setSubmenu(item.submenu)
+        };
+        if (has('execute')) {
+            const execute = () => new Promise(async (resolve, reject) => {
+                let res = null;
+                try {
+                    res = await item.execute();
+                } catch (err) {
+                    reject(err);
+                }
+                resolve(res);
+            });
+            execute().then(res => {
+                setSubmenu(res)
+            })
+        };
         return onSubmit(item.value);
     }
 
@@ -116,11 +137,11 @@ export const _ = ({ onSubmit=()=>{}, items, event }) => {
     })
 
     useEffect(() => {
-        if (typeof event !== 'undefined') {
-            event.on('menu_active', (active) => {
-                setDisable(active ? undefined : true);
-            })
-        }
+        // if (typeof event !== 'undefined') {
+        //     event.on('menu_active', (active) => {
+        //         setDisable(active ? undefined : true);
+        //     })
+        // }
     }, [])
 
     return <>

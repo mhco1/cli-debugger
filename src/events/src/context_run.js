@@ -1,12 +1,11 @@
 import { context } from '/data';
-import { processEvaluate } from '/utils';
+import { process } from '/utils';
 
 export const _ =  async (script, callback) => {
     if (context.now.length == 0) throw Error('No context was selected');
 
     const node = context.c[context.now];
-    const { send } = node;
-    const evaluate = (await send('eval', { script })).result;
-    const res = await processEvaluate._(evaluate, node);
+    const evaluate = (await node.send('eval', { script })).result;
+    const res = await process.evaluate(evaluate);
     callback(undefined, res);
 }

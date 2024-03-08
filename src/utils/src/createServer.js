@@ -2,7 +2,8 @@ import childProcess from 'child_process';
 import path from 'path';
 import { uuid } from '/utils';
 
-export const _ = (name, op) => {
+export const _ = (name, op = {}) => {
+    if(typeof name == 'undefined') throw Error('Name not defined to crate server');
     const requests = {};
     const dir = path.resolve('./dist/server.js');
     const node = childProcess.fork(dir, {

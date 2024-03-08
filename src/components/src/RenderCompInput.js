@@ -4,6 +4,7 @@ import { } from '@inkjs/ui';
 import { event } from '/events';
 import { Input as _Input, Arrow, Menu } from '/components';
 import { useValueChange } from '/hooks';
+import { toPromise } from '/utils';
 
 const useRender = (Comp, types, stateTypeRender) => {
     const [typeRender, setTypeRender] = stateTypeRender;
@@ -45,31 +46,46 @@ export const _ = (props) => {
             </Box>
         </>,
         object: () => {
-            const createItems = (data) => data.props.map(el => {
-                // {
-                //     label: `${el.name}: ${el.value}`, value: el
-                // }
+            const createItems = (data) => {
+                if (data.length == 0) {
+                    return [{
+                        label: <Text color='#ccc' >Not have properties</Text>,
+                        value: '',
+                    }]
+                }
 
-                const res = {
-                    label: `${el.name}: ${el.value ?? `[${el.type}]`}`,
-                    value: el,
-                };
+                return data.map(el => {
+                    // {
+                    //     label: `${el.name}: ${el.value}`, value: el
+                    // }
 
-                if (el.type == 'object') res.execute = () => {
-                    return ['aaa', 'bbb', 'ccc']
-                };
+                    const res = {
+                        label: `${el.name}: ${el.value ?? `[${el.type}]`}`,
+                        value: el,
+                    };
 
-                return res
-            });
+                    if (el.type == 'object') res.execute = async () => {
+                        const getProps = toPromise._((fn) => event.emit('context_get_props', el.id, fn));
+                        const data = await getProps();
+                        const res = createItems(data);
+                        return {
+                            label: el.name,
+                            data: res
+                        }
+                    };
+
+                    return res
+                })
+            };
 
             const onSubmit = (_data) => {
                 const [pos, data] = _data;
-                event.emit('RenderComp_objectSelect', { script, data, name });
+                if (data.type !== 'object') event.emit('RenderComp_objectSelect', { script, data, name });
                 renderOptions.defineType(data.type);
             }
 
             return <>
-                <Menu._ items={createItems(data)} onSubmit={onSubmit} />
+                <Menu._ items={createItems(data.props)} onSubmit={onSubmit} />
             </>
         }
     };
