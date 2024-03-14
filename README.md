@@ -1,79 +1,187 @@
-
 # cli-debugger
 
 Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](https://choosealicense.com/licenses/mit/)
 
+## Indice
+
+- [Instalação e execução](#instalação-e-execução)
+- [Estruntura do projeto](#estruntura-do-projeto)
+  - [Diretorios importantes](#diretorios-inportantes)
+- [Data](#data)
+
+## Em andamento
+
+- [ ] Visualização do resultado da operação
+  - [x] Strings /Number /Boolean
+  - [x] Object
+  - [ ] Array
+  - [ ] Function
+
+## Instalação e execução
+
+### Setup
+
+- [Node LTS](https://nodejs.org/en)
+- [Parcel](https://parceljs.org)
+
+### Instalação
+
+- **produção**:
+
+        npm run build
+        npm start
+
+- **desenvolvimento**:
+
+    Abra um terminal para ler as modificaçãoes e refazer o buider de modo atomatico.
+
+    Execute:
+
+        npm run watch
+
+    Depois abra outro terminal e execute o progama:
+
+        npm start
+
+    >Caso queira fazer testes sem interferir o fluxo principal
+    >
+    >Crie um arquivo `/src/App.test.js` exportando um componente
+    >
+    >Este não é commitado e pode substituir o component `App.js` durante os testes
+    >
+    >Tambem, ao inves de executar o progama normalmente, execute:
+    >
+    >       npm run experiment
+
 ## Estruntura do projeto
 
-Todos os arquivos que são utilizados pelo projeto estam localizados em `src` com a respectiva estruntura:
+O projeto todo é estrunturado na pasta `/src`.
+
+### Arquivos importantes
 
 - `/src/cli.js`
 
-    Primeiro arquivo interpretado pela ferramenta.
+    Primeiro arquivo interpretado ao rodar o projeto.
+
     Este faz as primeiras configurações e roda o render do `React`.
 
 - `/src/App.js`
 
-    Primeiro componente renderizado pelo arquivo cli.
-    Pincipal componente da ferramenta.
-    Este que aclopa outros componentes e rege o fluxo da ferramenta.
+    Pincipal componente do projeto e o primeiro a ser renderizado.
+
+    Este aclopa outros componentes e rege o fluxo do progama.
 
 - `/src/cli.conf.js`
 
-    Arquivo de configurações padrões interpretado por `/src/cli.js`.
+    Arquivo de configurações padrões.
 
-### Diretorios com funcinalidades
+- `/src/data.js`
 
-Dentro de `/src` temos alguns diretorios importantes que seguem o determinado template:
+    Amarzena dados do progama, [veja aqui](#data)
 
-- `/src/$NAME/*`: diretorio principal correspondente à alguma ultilidade do projeto,
-  - `./src/*`: arquivos correspondente a tal utilidade,
-  - `./index.js`: arquivo index ultilizado pelo projeto para importação dos arquivos.
+- `/src/serve.js`
 
-São os diretorios (substitu-se `$NAME` pelo diretorio):
+    Ultilizado como instancia de um servidor que ira interpretar codigos nodejs
 
-#### components
+### Diretorios inportantes
 
-Comporta os componentes ultilizados pelo sistema.
-Os componentes devem ser nomeados com PascalCase de acordo com a nomenclatura de componentes React.
+Dentro de `/src` temos alguns diretorios importantes que seguem a seguinte estruntura:
 
-O componente criado deve comportar a seguinte estruntura:
+- `/src/$DIRETORIO/`: diretorio principal à alguma funcionalidade do projeto,
+  - `./src/*`: arquivos da funcinalidade,
+  - `./index.js`: arquivo de indexação dos arquivos em `./src/*` ultilizado pelo projeto.
+
+São os diretorios:
+
+- `/src/components/`
+
+    Componentes ultilizados pelo sistema.
+
+- `/src/events/`
+
+    Eventos que são emitidos durante o fluxo do progama
+    Geralmente com a finalidade de integrar partes opostas
+
+- `/src/hooks/`
+
+    Hooks personalizados que podem ser reaproveitados entre componentes
+
+- `/src/utils/`
+
+    Funcoes personalizadas e independentes para abstrair melhor codigo
+
+Caso queira saber mais sobre cada diretorio [veja aqui](#formato-dos-diretorios)
+
+## Formato dos diretorios
+
+### nomenclatura dos arquivos
+
+| Arquivos       | Nomenclatura    |
+|----------------|-----------------|
+| **components** | UpperCamelCase  |
+| **events**     | underscore_case |
+| **hooks**      | camelCase       |
+| **utils**      | camelCase       |
+
+### exportando
+
+Como o index para os arquivos é gerado, o uso da exportação `default` torna-se instavel.
+
+Portanto, substitui-se `default` pela variavel `_`.
 
 ```javascript
-    import React, {  } from 'react';
-    // import {  } from 'ink';
-    // import {  } from '@inkjs/ui';
-    // ...
-
-    export const _ = ({/* Props */}) => {
-        
-        // Codigo que roda durante a renderização...
-
-        return <>
-            {/* Componente */}
-        </>
-    }
+    export const _ = /* funcionalidade */
 ```
 
-E utilizado como o exemplo abaixo:
+Caso nescessario, de forma alternativa, podemos exportar mais de uma variavel.
 
 ```javascript
-import React, { } from 'react';
-// import { } from 'ink';
-// import { } from '@inkjs/ui';
-import { Exemple } from '/components';
-//...
+    export const aaa = /* funcionalidade 1*/
+    export const bbb = /* funcionalidade 2*/
+```
 
+### importando
 
-export default ({/* Props */}) => {
+```javascript
+    import { exemplo } from '/$DIRETORIO'; // exemplo._
+```
 
-    // Codigo que roda durante a renderização...
+> Os eventos, diferente dos demais, são expostos em uma instancia do `EventEmitter`.
+>
+> ```javascript
+>   import { event } from '/events';
+>
+>   //...
+>
+>   event.emit('exemple');
+> ```
 
-    return <>
-        <Exemple />
-    </>
-}
+## Data
 
+Responsavel por armazenar dados e configurações durante o fluxo do progama
+
+Expoem um objeto do qual cada campo referece a uma informação diferente
+
+Por exemplo, suponhamos que exportamos um objeto `Exemplo` que armazena algumas configurações
+
+```javascript
+    //...
+
+    export const exemplo = {
+
+        // configurações...
+
+    };
+
+    //...
+```
+
+Podemos, então, utiliza-lo em qualquer outra parte do codigo somente importando o arquivo `/src/data`
+
+```javascript
+    import { exemplo } from '/data';
+
+    //...
 ```
