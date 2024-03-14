@@ -6,10 +6,17 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 ## Indice
 
-- [Instalação e execução](#instalação-e-execução)
+- [Em andamento](#em-andamento)
+- [Instalação](#instalação)
 - [Estruntura do projeto](#estruntura-do-projeto)
   - [Diretorios importantes](#diretorios-inportantes)
 - [Data](#data)
+
+## Tecnologias ultilizadas
+
+- [Node LTS](https://nodejs.org/en): runtime javasript,
+- [Parcel](https://parceljs.org): empacotador de arquivos,
+- [Ink](https://github.com/vadimdemedes/ink#readme): React para interface em terminal,
 
 ## Em andamento
 
@@ -19,41 +26,42 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
   - [ ] Array
   - [ ] Function
 
-## Instalação e execução
+## Instalação
 
-### Setup
+### Produção
 
-- [Node LTS](https://nodejs.org/en)
-- [Parcel](https://parceljs.org)
+```bash
+    npm run build
+    npm start
+```
 
-### Instalação
+### Desenvolvimento
 
-- **produção**:
+Abra um terminal para ler as modificaçãoes e refazer o buider de modo atomatico.
 
-        npm run build
-        npm start
+Execute:
 
-- **desenvolvimento**:
+```bash
+    npm run watch
+```
 
-    Abra um terminal para ler as modificaçãoes e refazer o buider de modo atomatico.
+Depois abra outro terminal e execute o progama:
 
-    Execute:
+```bash
+    npm start
+```
 
-        npm run watch
-
-    Depois abra outro terminal e execute o progama:
-
-        npm start
-
-    >Caso queira fazer testes sem interferir o fluxo principal
-    >
-    >Crie um arquivo `/src/App.test.js` exportando um componente
-    >
-    >Este não é commitado e pode substituir o component `App.js` durante os testes
-    >
-    >Tambem, ao inves de executar o progama normalmente, execute:
-    >
-    >       npm run experiment
+>Caso queira fazer testes sem interferir o fluxo principal
+>
+>Crie um arquivo `/src/App.test.js` exportando um componente
+>
+>Este não é commitado e pode substituir o component `App.js` durante os testes
+>
+>Tambem, ao inves de executar o progama normalmente, execute:
+>
+>```bash
+> npm run experiment
+>```
 
 ## Estruntura do projeto
 
