@@ -8,6 +8,8 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 - [Em andamento](#em-andamento)
 - [Instalação](#instalação)
+  - [Produção](#produção)
+  - [Desenvolvimento](#desenvolvimento)
 - [Estruntura do projeto](#estruntura-do-projeto)
   - [Diretorios importantes](#diretorios-inportantes)
 - [Data](#data)
