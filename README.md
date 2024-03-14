@@ -20,8 +20,9 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 - [Parcel](https://parceljs.org): empacotador de arquivos,
 - [Ink](https://github.com/vadimdemedes/ink#readme): React para interface em terminal,
 
-## Em andamento
+## Em desenvolvimento
 
+- [ ] Menu de configurações
 - [ ] Visualização do resultado da operação
   - [x] Strings /Number /Boolean
   - [x] Object
