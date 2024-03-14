@@ -1,11 +1,16 @@
 import React, { } from 'react';
-import { Box, Text } from 'ink';
+import { Box, } from 'ink';
 import { } from '@inkjs/ui';
+import { Text } from '/components'
 import { codes } from '/data';
 
 
-export const _ = ({ name }) => <>
-    <Box marginRight={1}>
-        <Text color='#0000ff'>{`${name} ${codes.arrow.rigth}`}</Text>
-    </Box>
-</>
+export const _ = ({ name }) => {
+    const txt = `${name} ${codes.arrow.rigth}`
+
+    return <>
+        <Box marginRight={1}>
+            <Text._ p1>{txt}</Text._>
+        </Box>
+    </>
+}

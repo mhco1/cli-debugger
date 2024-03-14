@@ -24,6 +24,38 @@ const useRender = (Comp, types, stateTypeRender) => {
     return op;
 }
 
+const objectCreateItems = (data) => {
+    if (data.length == 0) {
+        return [{
+            label: <Text color='#ccc' >Not have properties</Text>,
+            value: '',
+        }]
+    }
+
+    return data.map(el => {
+        // {
+        //     label: `${el.name}: ${el.value}`, value: el
+        // }
+
+        const res = {
+            label: `${el.name}: ${el.value ?? `[${el.type}]`}`,
+            value: el,
+        };
+
+        if (el.type == 'object') res.execute = async () => {
+            const getProps = toPromise._((fn) => event.emit('context_get_props', el.id, fn));
+            const data = await getProps();
+            const res = objectCreateItems(data);
+            return {
+                label: el.name,
+                data: res
+            }
+        };
+
+        return res
+    })
+};
+
 export const _ = (props) => {
     const Data = useRef();
     const { handles, value, stateTypeRender, context } = props;
@@ -46,38 +78,6 @@ export const _ = (props) => {
             </Box>
         </>,
         object: () => {
-            const createItems = (data) => {
-                if (data.length == 0) {
-                    return [{
-                        label: <Text color='#ccc' >Not have properties</Text>,
-                        value: '',
-                    }]
-                }
-
-                return data.map(el => {
-                    // {
-                    //     label: `${el.name}: ${el.value}`, value: el
-                    // }
-
-                    const res = {
-                        label: `${el.name}: ${el.value ?? `[${el.type}]`}`,
-                        value: el,
-                    };
-
-                    if (el.type == 'object') res.execute = async () => {
-                        const getProps = toPromise._((fn) => event.emit('context_get_props', el.id, fn));
-                        const data = await getProps();
-                        const res = createItems(data);
-                        return {
-                            label: el.name,
-                            data: res
-                        }
-                    };
-
-                    return res
-                })
-            };
-
             const onSubmit = (_data) => {
                 const [pos, data] = _data;
                 if (data.type !== 'object') event.emit('RenderComp_objectSelect', { script, data, name });
@@ -85,7 +85,7 @@ export const _ = (props) => {
             }
 
             return <>
-                <Menu._ items={createItems(data.props)} onSubmit={onSubmit} />
+                <Menu._ items={objectCreateItems(data.props)} onSubmit={onSubmit} />
             </>
         }
     };

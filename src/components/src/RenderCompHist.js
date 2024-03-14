@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Text } from 'ink';
+import { Box } from 'ink';
 import { } from '@inkjs/ui';
 import { event } from '/events';
-import { Input as _Input, Arrow } from '/components';
+import { Input as _Input, Arrow, Text } from '/components';
+// import { colors } from '/data';
 
 
 const Context = ({ name, script }) => <>
     <Box>
         <Arrow._ name={name} />
-        <Text>{script}</Text>
+        <Text._>{script}</Text._>
     </Box>
 </>
 
@@ -18,11 +19,11 @@ export const _ = (props) => {
     const types = {
         value: () => <>
             <Context {...props} />
-            <Text color="#ffff00">{data.value}</Text>
+            <Text._ p2>{data.value}</Text._>
         </>,
         error: () => <>
             <Context {...props} />
-            <Text color="#ff0000">{data.value}</Text>
+            <Text._ error>{data.value}</Text._>
         </>,
         object: () => {
             // const [isContent, setIsContent] = useState(false);
@@ -43,7 +44,7 @@ export const _ = (props) => {
                     arm.isContent ?
                         <>
                             <Context {...props} />
-                            <Text color="#ffff00">{data.value}</Text>
+                            <Text._ p2>{data.value}</Text._>
                         </> :
                         <></>
                 }

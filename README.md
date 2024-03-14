@@ -6,7 +6,7 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 ## Indice
 
-- [Em andamento](#em-andamento)
+- [Em desenvolvimento](#em-desenvolvimento)
 - [Instalação](#instalação)
   - [Produção](#produção)
   - [Desenvolvimento](#desenvolvimento)
@@ -22,6 +22,9 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 ## Em desenvolvimento
 
+- [ ] Input
+  - [x] historico
+  - [ ] autocompletar
 - [ ] Menu de configurações
 - [ ] Visualização do resultado da operação
   - [x] Strings /Number /Boolean

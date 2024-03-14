@@ -1,16 +1,18 @@
 import React from 'react';
-import { Text } from 'ink';
+import { } from 'ink';
 import asciify from 'asciify';
 import pkg from '/package.json';
 import { toPromise } from '/utils';
+import { Text } from '/components'
+// import { colors } from '/data';
 
 const asciify2 = toPromise._(asciify);
 const title = await asciify2(pkg.name, { font: 'drpepper' });
 
 export const _ = () => {
     return <>
-        <Text color='#00ff00'>{title}</Text>
-        <Text>Type '.help' for more information</Text>
-        <Text>Press CTRL+C or type .exit to exit</Text>
+        <Text._ p3>{title}</Text._>
+        <Text._>Type '.help' for more information</Text._>
+        <Text._>Press CTRL+C or type .exit to exit</Text._>
     </>
 }
