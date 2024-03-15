@@ -10,7 +10,7 @@ export const _ = ({ name }) => {
 
     return <>
         <Box marginRight={1}>
-            <Text._ p1>{txt}</Text._>
+            <Text._.p1>{txt}</Text._.p1>
         </Box>
     </>
 }

@@ -27,21 +27,10 @@ export const codes = {
     }
 };
 
-// export const colors = {
-//     black: chalk.hex('#000'),
-//     white: chalk.hex('#fff'),
-//     s_black: chalk.hex('#444'),
-//     s_white: chalk.hex('#bbb'),
-//     p1: chalk.hex('#00f'),
-//     p2: chalk.hex('#ff0'),
-//     p3: chalk.hex('#0f0'),
-//     error: chalk.hex('#f00')
-// }
-
 export const colors = [
     ['white', chalk.white],
     ['black', chalk.black],
-    ['gary', chalk.gray],
+    ['gray', chalk.gray],
     ['p1', chalk.blue],
     ['p2', chalk.yellow],
     ['p3', chalk.green],

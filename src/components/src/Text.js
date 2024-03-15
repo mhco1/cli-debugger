@@ -3,16 +3,13 @@ import { Text } from 'ink';
 import { } from '@inkjs/ui';
 import { colors } from '/data';
 
+const Text2 = (props) => <Text {...props} />
 
-export const _ = (props) => {
+colors.forEach(([key, fn]) => {
+    Text2[key] = ({ children }) =>
+        <Text>
+            { fn(children) }
+        </Text>
+})
 
-    // const color = colors[type || 'white'];
-    const colorFilter = colors.filter(el => props[el[0]]);
-    const color = colorFilter.length < 1 ? colors[2][1] : colorFilter[0][1];
-
-    return <>
-        <Text>{
-            color(props.children)
-        }</Text>
-    </>
-}
+export const _ = Text2

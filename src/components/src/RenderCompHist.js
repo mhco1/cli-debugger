@@ -3,7 +3,6 @@ import { Box } from 'ink';
 import { } from '@inkjs/ui';
 import { event } from '/events';
 import { Input as _Input, Arrow, Text } from '/components';
-// import { colors } from '/data';
 
 
 const Context = ({ name, script }) => <>
@@ -19,11 +18,11 @@ export const _ = (props) => {
     const types = {
         value: () => <>
             <Context {...props} />
-            <Text._ p2>{data.value}</Text._>
+            <Text._.p2>{data.value}</Text._.p2>
         </>,
         error: () => <>
             <Context {...props} />
-            <Text._ error>{data.value}</Text._>
+            <Text._.error>{data.value}</Text._.error>
         </>,
         object: () => {
             // const [isContent, setIsContent] = useState(false);
@@ -44,7 +43,7 @@ export const _ = (props) => {
                     arm.isContent ?
                         <>
                             <Context {...props} />
-                            <Text._ p2>{data.value}</Text._>
+                            <Text._.p2>{data.value}</Text._.p2>
                         </> :
                         <></>
                 }

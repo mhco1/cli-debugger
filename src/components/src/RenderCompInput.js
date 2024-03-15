@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
-import { Box, Text } from 'ink';
+import { Box } from 'ink';
 import { } from '@inkjs/ui';
 import { event } from '/events';
-import { Input as _Input, Arrow, Menu } from '/components';
+import { Input as _Input, Arrow, Menu, Text } from '/components';
 import { useValueChange } from '/hooks';
 import { toPromise } from '/utils';
 
@@ -27,7 +27,7 @@ const useRender = (Comp, types, stateTypeRender) => {
 const objectCreateItems = (data) => {
     if (data.length == 0) {
         return [{
-            label: <Text color='#ccc' >Not have properties</Text>,
+            label: <Text._.gray >Not have properties</Text._.gray>,
             value: '',
         }]
     }
