@@ -24,6 +24,7 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 - [ ] Input
   - [x] historico
+  - [ ] autoexecutar
   - [ ] autocompletar
 - [ ] Menu de configurações
 - [ ] Visualização do resultado da operação

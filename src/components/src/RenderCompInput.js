@@ -59,8 +59,6 @@ const objectCreateItems = (data) => {
 export const _ = (props) => {
     const Data = useRef();
     const { handles, value, stateTypeRender, context } = props;
-    // const {send} = context;
-    // const [typeRender, setTypeRender] = stateTypeRender;
     const [handleSubmit, handleHist] = handles;
     const lastProps = handleHist.getLast();
     const { script, data, name } = lastProps;

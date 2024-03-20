@@ -31,8 +31,9 @@ export const colors = [
     ['white', chalk.white],
     ['black', chalk.black],
     ['gray', chalk.gray],
-    ['p1', chalk.blue],
-    ['p2', chalk.yellow],
-    ['p3', chalk.green],
-    ['error', chalk.red],
+    ['p1', chalk.blueBright],
+    ['p2', chalk.magentaBright],
+    ['s1', chalk.yellowBright],
+    ['s2', chalk.greenBright],
+    ['error', chalk.redBright],
 ]

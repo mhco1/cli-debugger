@@ -18,7 +18,7 @@ export const _ = (props) => {
     const types = {
         value: () => <>
             <Context {...props} />
-            <Text._.p2>{data.value}</Text._.p2>
+            <Text._.s1>{data.value}</Text._.s1>
         </>,
         error: () => <>
             <Context {...props} />
@@ -43,11 +43,14 @@ export const _ = (props) => {
                     arm.isContent ?
                         <>
                             <Context {...props} />
-                            <Text._.p2>{data.value}</Text._.p2>
+                            <Text._.s1>{data.value}</Text._.s1>
                         </> :
                         <></>
                 }
             </>
+        },
+        function: () =>{
+            return <Text._>[ Function ({data.name}) ]</Text._>
         }
     }
 
