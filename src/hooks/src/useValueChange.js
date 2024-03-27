@@ -3,10 +3,12 @@ import { } from 'ink';
 import { } from '@inkjs/ui';
 
 
-export const _ = (value, callback = () => { }) => {
-    const storeValue = useRef();
-    const res = typeof storeValue === 'undefined' || storeValue !== 'value';
+export const _ = (value = null, callback = () => { }) => {
+    const arm = useRef();
+    const res =
+        typeof arm.current !== 'undefined' &&
+        arm.current !== value;
     if (res) callback();
-    storeValue.current = value;
+    arm.current = value;
     return res;
 }

@@ -1,117 +1,55 @@
-import React, { useRef, useState, isValidElement, useEffect } from 'react';
-import { EventEmitter } from 'events';
+import React, { useState } from 'react';
+import { } from 'ink';
+import { } from '@inkjs/ui';
+import { MenuSimple, Text } from '/components';
 import { codes } from '/data';
-import { Text, useInput } from 'ink';
-import { Select } from '@inkjs/ui';
-import { uuid } from '/utils'
 
-const processItems = (arr, label = '$', prev = { values: {}, items: [], path: [] }) => {
+const Menu = (props) => <MenuSimple._ {...props} />
 
-    const convert = (el, idx, id) => {
-        const singleConvert = (el) => {
-            if (['string', 'number'].includes(typeof el)) return [
-                { label: el, value: id },
-                { value: [idx, el] }
-            ];
-            if (isValidElement(el)) return [
-                { label: el, value: id },
-                { value: [idx] }
-            ];
+export const submenu = (props) => {
 
-            return []
-        };
-
-        {
-            const res = singleConvert(el);
-            if (res.length > 0) return res;
-        }
-
-        if (Array.isArray(el)) {
-            const res = singleConvert(el[0]);
-            if (typeof el[1] !== 'undefined') {
-                res[1].value = [idx, el[1]];
-            }
-            return res;
-        }
-
-        if (typeof el === 'object') {
-            const res = singleConvert(el.label);
-            if (res.length < 1) throw Error(`Invalid value to el.label\nType is: ${typeof el.label}`);
-            return [
-                res[0],
-                { ...el, value: [idx, (el.value ?? res[1].value[1])] }
-            ]
-        }
-
-        if (typeof el === 'function') {
-            let res = el();
-            res = singleConvert(res);
-            if (res.length < 1) throw Error(`Invalid value to el()\nType is: ${typeof res}`);
-            return res
-        }
-
-        throw Error(`Invalid value to el\nType is: ${typeof el}`);
+    const back = {
+        label: codes.arrow.left.repeat(2),
+        _: {
+            back: true,
+        },
     }
 
-    const res = {
-        ...prev,
-        values: { ...prev.values },
-        items: [...prev.items, []],
-        path: [...prev.path, label],
-    };
-
-    arr.forEach((el, i) => {
-        const id = uuid._();
-        const [item, value] = convert(el, i, id);
-
-        res.values[id] = value;
-        res.items.slice(-1)[0].push(item)
+    const [op, setOp] = useState({
+        items: [props.items],
+        path: ['$'],
     })
 
-    return res
-}
-
-const removeItems = (prev) => {
-    const res = {
-        ...prev,
-        items: prev.items.slice(0, -1),
-        path: prev.path.slice(0, -1),
-    }
-    prev.items.slice(-1)[0].forEach(el => {
-        const { value } = el;
-        delete res.values[value];
-    })
-
-    return res;
-}
-
-const back = {
-    label: codes.arrow.left.repeat(2),
-    _: {
-        back: true,
-    },
-}
-
-export const _ = ({ onSubmit = () => { }, items }) => {
-    let handleToExecute;
-    const [disable, setDisable] = useState();
-    const [op, setOp] = useState(processItems(items));
-
-    const handleItem = (item) => {
+    const handleSubmit = (item) => {
         const has = (prop) => Object.hasOwn(item, prop);
 
         const setSubmenu = (submenu) => {
-            const { label, data } = !Array.isArray(submenu) ? submenu : { label: item.label, data: submenu }
-            setOp(processItems([back, ...data], label, op));
-            return
+            const { path, data } =
+                Array.isArray(submenu) ?
+                    { path: item.label || item.value, data: submenu } :
+                    typeof submenu === 'object' ?
+                        submenu :
+                        undefined;
+
+            op.items = [...op.items, data];
+            op.path = [...op.path, path];
+            setOp({ ...op });
+        }
+
+        const removeItems = () => {
+            op.items = op.items.slice(0, -1);
+            op.path = op.path.slice(0, -1);
+            setOp({ ...op });
         }
 
         if (has('_')) {
-            if (item._.back) return setOp(removeItems(op));
+            if (item._.back) return removeItems();
         }
+
         if (has('submenu')) {
             return setSubmenu(item.submenu)
         };
+
         if (has('execute')) {
             const execute = () => new Promise(async (resolve, reject) => {
                 let res = null;
@@ -122,38 +60,26 @@ export const _ = ({ onSubmit = () => { }, items }) => {
                 }
                 resolve(res);
             });
-            execute().then(res => {
+            return execute().then(res => {
                 setSubmenu(res)
             })
         };
-        return onSubmit(item.value);
+
+        return props.onSubmit(item);
     }
 
-    useInput((input, key) => {
-        if (key.return) {
-            handleToExecute = handleItem;
-            return
-        }
-    })
-
-    useEffect(() => {
-        // if (typeof event !== 'undefined') {
-        //     event.on('menu_active', (active) => {
-        //         setDisable(active ? undefined : true);
-        //     })
-        // }
-    }, [])
+    const items = op.items.length < 2 ?
+        op.items.slice(-1)[0] :
+        [back, ...op.items.slice(-1)[0]];
 
     return <>
-        <Text>{op.path.join(' \u276f ')}</Text>
-        <Select
-            isDisabled={disable}
-            options={op.items.slice(-1)[0]}
-            onChange={(id) => {
-                const item = op.values[id];
-                if (typeof handleToExecute == 'undefined') return
-                handleToExecute(item);
-            }}
+        <Text._>{op.path.join(` ${codes.arrow.rigth} `)}</Text._>
+        <MenuSimple._
+            {...props}
+            items={items}
+            onSubmit={handleSubmit}
         />
     </>
 }
+
+export const _ = Menu;

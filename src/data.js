@@ -1,7 +1,7 @@
 import meow from 'meow';
 import chalk from 'chalk';
 
-export const context = { c: {}, now: '' };
+export const context = { c: {}, now: '', start: true, };
 
 export const cli = meow(
     `
