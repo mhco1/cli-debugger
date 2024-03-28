@@ -13,7 +13,7 @@ const convert = (el, idx, selectDef) => {
         const [{ update }, useSelect] = componentExternalUpdate._();
         const Arrow = ({ }) => {
             const isSelect = useSelect(selectDef);
-            return <Text._>{isSelect ? codes.arrow.rigth : ' '} </Text._>
+            return <Text._> {isSelect ? codes.arrow.rigth : ' '} </Text._>
         };
 
         if (['string', 'number'].includes(typeof el)) {
@@ -100,7 +100,7 @@ export const _ = (props) => {
     const [items, itemsComp] = useMemo(() => {
         const lastIdx = props.items.length - 1;
         let _select = select;
-        if(lastIdx < select) {
+        if (lastIdx < select) {
             _select = lastIdx;
             setSelect(lastIdx);
         }
@@ -120,16 +120,16 @@ export const _ = (props) => {
         if (key.return) {
             return onSubmit(items[select]);
         }
-        if (select > 0 && key.upArrow) {
+        if (select > 0 && (props.row ? key.leftArrow : key.upArrow)) {
             return selectNext(select - 1);
         };
-        if (select < items.length - 1 && key.downArrow) {
+        if (select < items.length - 1 && (props.row ? key.rightArrow : key.downArrow)) {
             return selectNext(select + 1);
         };
     })
 
     return <>
-        <Box flexDirection="column">
+        <Box flexDirection={props.row ? 'row' : 'column'}>
             {itemsComp}
         </Box>
     </>
