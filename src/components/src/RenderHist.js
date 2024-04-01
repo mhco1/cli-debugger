@@ -32,7 +32,17 @@ export const _ = (props) => {
             return <>
                 <Data {...{ ...props, data }} />
             </>
-        }
+        },
+        // function: (props) => {
+        //     const useResponse = componentExternalUpdate._('render_function')[1];
+        //     const data = useResponse(null);
+        //     const Data = data ? types[data.type] : () => { };
+
+        //     return <>
+        //         <Data {...{ ...props, data }} />
+        //     </>
+        // },
+        function: ()=><></>
     }
 
     const Data = types[props.data.type];

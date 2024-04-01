@@ -7,40 +7,12 @@ import { useContext } from '/hooks';
 import { toPromise, componentExternalUpdate } from '/utils';
 import * as _data from '/data';
 
-const objectCreateItems = (data) => {
-    if (data.length == 0) {
-        return [{
-            label: <Text._.gray >Not have properties</Text._.gray>,
-            value: { type:'value' },
-        }]
-    }
-
-    return data.map(el => {
-        const res = {
-            label: `${el.name}: ${el.value || `[${el.type}]`}`,
-            value: el,
-        };
-
-        if (el.type == 'object') res.execute = async () => {
-            const getProps = toPromise._((fn) => event.emit('context_get_props', el.id, fn));
-            const data = await getProps();
-            const res = objectCreateItems(data);
-            return {
-                path: el.name,
-                data: res
-            }
-        };
-
-        return res
-    })
-};
-
 export const _ = ({ onSubmit, type, setType }) => {
     const [context, update, hist] = useContext._();
 
     const types = {
         default: () => {
-            const { script , data } = hist.getValue();
+            const { script, data } = hist.getValue();
 
             return <>
                 <Box>
@@ -62,6 +34,34 @@ export const _ = ({ onSubmit, type, setType }) => {
                 setType('value');
             }
 
+            const objectCreateItems = (data) => {
+                if (data.length == 0) {
+                    return [{
+                        label: <Text._.gray >Not have properties</Text._.gray>,
+                        value: { type: 'value' },
+                    }]
+                }
+            
+                return data.map(el => {
+                    const res = {
+                        label: `${el.name}: ${el.value || `[${el.type}]`}`,
+                        value: el,
+                    };
+            
+                    if (el.type == 'object') res.execute = async () => {
+                        const getProps = toPromise._((fn) => event.emit('context_get_props', el.id, fn));
+                        const data = await getProps();
+                        const res = objectCreateItems(data);
+                        return {
+                            path: el.name,
+                            data: res
+                        }
+                    };
+            
+                    return res
+                })
+            };
+
             return <>
                 <Menu.submenu
                     items={objectCreateItems(data.props)}
@@ -69,6 +69,13 @@ export const _ = ({ onSubmit, type, setType }) => {
                 />
             </>
         },
+        function: () => {
+
+            
+            return <>
+                <Text._>ok</Text._>
+            </>   
+        }
     };
 
     const Data = types[type];

@@ -95,41 +95,39 @@ const processItems = (arr, select) => {
     return [resItems, resComps]
 }
 
-export const _ = (props) => {
+export const _ = ({ onSubmit = () => { }, items, active, row }) => {
     const [select, setSelect] = useState(0);
-    const [items, itemsComp] = useMemo(() => {
-        const lastIdx = props.items.length - 1;
-        let _select = select;
-        if (lastIdx < select) {
-            _select = lastIdx;
-            setSelect(lastIdx);
-        }
-        return processItems(props.items, _select)
-    }, [props.items]);
-    const onSubmit = props.onSubmit || (() => { });
+    const [itemsObj, itemsComp] = useMemo(
+        () => processItems(items, select),
+        [items]
+    );
 
     useInput((input, key) => {
         const selectNext = (next) => {
-            items[select].update(false);
-            items[next].update(true);
+            itemsObj[select].update(false);
+            itemsObj[next].update(true);
             setSelect(next);
         }
 
-        if (typeof props.active !== 'undefined' && !props.active) return
+        if (typeof active !== 'undefined' && !active) return
 
         if (key.return) {
-            return onSubmit(items[select]);
+            return onSubmit(itemsObj[select]);
         }
-        if (select > 0 && (props.row ? key.leftArrow : key.upArrow)) {
+        if (select > 0 && (row ? key.leftArrow : key.upArrow)) {
             return selectNext(select - 1);
         };
-        if (select < items.length - 1 && (props.row ? key.rightArrow : key.downArrow)) {
+        if (select < itemsObj.length - 1 && (row ? key.rightArrow : key.downArrow)) {
             return selectNext(select + 1);
         };
     })
+    const lastIdx = itemsObj.length - 1;
+    if (lastIdx < select) {
+        setSelect(lastIdx);
+    }
 
     return <>
-        <Box flexDirection={props.row ? 'row' : 'column'}>
+        <Box flexDirection={row ? 'row' : 'column'}>
             {itemsComp}
         </Box>
     </>
