@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useEffect } from 'react';
 import { Box } from 'ink';
 import { } from '@inkjs/ui';
 import { event } from '/events';
@@ -41,13 +41,13 @@ export const _ = ({ onSubmit, type, setType }) => {
                         value: { type: 'value' },
                     }]
                 }
-            
+
                 return data.map(el => {
                     const res = {
                         label: `${el.name}: ${el.value || `[${el.type}]`}`,
                         value: el,
                     };
-            
+
                     if (el.type == 'object') res.execute = async () => {
                         const getProps = toPromise._((fn) => event.emit('context_get_props', el.id, fn));
                         const data = await getProps();
@@ -57,7 +57,7 @@ export const _ = ({ onSubmit, type, setType }) => {
                             data: res
                         }
                     };
-            
+
                     return res
                 })
             };
@@ -70,11 +70,30 @@ export const _ = ({ onSubmit, type, setType }) => {
             </>
         },
         function: () => {
+            const { script, data } = hist.getValue(-1);
+            const response = componentExternalUpdate._('render_function')[0];
+            const Anonymous = () => <Text._.gray>anonymous</Text._.gray>
+            const Name = () => <Text._>{data.name || <>[<Anonymous />]</>}</Text._>;
+            const buttons = [{
+                label: 'Run',
+                value: {
+                    onSubmit: async (parameters) => {
+                        const callFunction = toPromise._((...args) => event.emit('context_call_function', ...args));
+                        const _data = await callFunction(data.id, parameters);
+                        response.update(_data);
+                        response.disconnect();
+                        setType('value');
+                    }
+                }
+            }];
 
-            
             return <>
-                <Text._>ok</Text._>
-            </>   
+                <Box flexDirection='row'>
+                    <Text._><Name />( </Text._>
+                    <Menu.list row buttons={buttons} />
+                    <Text._>)</Text._>
+                </Box>
+            </>
         }
     };
 

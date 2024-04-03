@@ -36,7 +36,9 @@ export const evaluate = async (evaluate) => {
         }
 
         return {
-            type: 'function', name: _props.filter(el => el.name == 'name')[0].value.value
+            type: 'function',
+            name: _props.filter(el => el.name == 'name')[0].value.value,
+            id: evaluate.objectId,
         }
     }
 }

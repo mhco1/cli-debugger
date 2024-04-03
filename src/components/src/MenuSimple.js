@@ -95,14 +95,14 @@ const processItems = (arr, select) => {
     return [resItems, resComps]
 }
 
-export const _ = ({ onSubmit = () => { }, items, active, row }) => {
+export const _ = ({ onSubmit = async () => { }, items, active, row }) => {
     const [select, setSelect] = useState(0);
     const [itemsObj, itemsComp] = useMemo(
         () => processItems(items, select),
         [items]
     );
 
-    useInput((input, key) => {
+    useInput(async (input, key) => {
         const selectNext = (next) => {
             itemsObj[select].update(false);
             itemsObj[next].update(true);
@@ -112,7 +112,7 @@ export const _ = ({ onSubmit = () => { }, items, active, row }) => {
         if (typeof active !== 'undefined' && !active) return
 
         if (key.return) {
-            return onSubmit(itemsObj[select]);
+            return await onSubmit(itemsObj[select]);
         }
         if (select > 0 && (row ? key.leftArrow : key.upArrow)) {
             return selectNext(select - 1);

@@ -149,13 +149,13 @@ export const list = (props) => {
         items: [createItem(), ...buttons],
     }))
 
-    const handleSubmit = ({ value: { type, onSubmit, update } }) => {
+    const handleSubmit = async ({ value: { type, onSubmit, update } }) => {
         op.active = false;
         if (type == 'item') update(true);
         if (type == 'button') {
-            const res = op.items.slice(0, -numButtons).map(el => el.value.txt);
+            const res = op.items.slice(0, -numButtons -1).map(el => el.value.txt);
             const setActive = (v) => { op.active = v };
-            onSubmit(res, setActive);
+            await onSubmit(res, setActive);
         };
         setOp({ ...op });
     }

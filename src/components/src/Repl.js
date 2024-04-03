@@ -10,8 +10,8 @@ export const _ = ({ }) => {
     const [context, update, hist] = useContext._();
 
     const handleSubmit = async (script) => {
-        const run = toPromise._((fn) => event.emit('context_run', script, fn));
-        const data = await run();
+        const run = toPromise._((...args) => event.emit('context_run', ...args));
+        const data = await run(script);
         hist.add(Render.Hist, { script, data, name: context.name });
         return data.type
     }

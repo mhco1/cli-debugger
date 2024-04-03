@@ -1,3 +1,5 @@
+
+
 {
     process.title = `_node_runtime_${process.env.NAME}`
 
@@ -15,6 +17,10 @@
             await session.post('Runtime.getProperties', {
                 objectId: id, ownProperties: true,
             }),
+        call: async ({ id, parameters=[] }) =>
+            await session.post('Runtime.callFunctionOn', {
+                functionDeclaration: 'function(...a){return this(...a)}', arguments: parameters, objectId: id, 
+            })
     };
 
     process.on('message', ({ exe, id, data }) => {
