@@ -1,5 +1,5 @@
 import { Reporter } from '@parcel/plugin';
-import sh from 'shelljs'
+import sh from 'shelljs';
 
 export default new Reporter({
     report({ event }) {

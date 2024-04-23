@@ -1,0 +1,25 @@
+import React, { useState } from 'react';
+import { } from 'ink';
+import { } from '@inkjs/ui';
+import { useContext } from '~hooks'
+import { Render } from '~components';
+
+export default ({ onSubmit }) => {
+    const [context, update, hist] = useContext();
+    const [type, setType] = useState('default');
+
+    const modifySetType = (type) => {
+        const res = ['value', 'error'].includes(type) ? 'default' : type;
+        setType(res);
+    };
+
+    const modifyOnSubmit = async (script) => {
+        const type = await onSubmit(script);
+        modifySetType(type);
+    }
+
+    return <>
+        {context.hist.comp}
+        <Render.Input type={type} setType={modifySetType} onSubmit={modifyOnSubmit} />
+    </>
+}

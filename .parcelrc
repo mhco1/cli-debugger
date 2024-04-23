@@ -1,6 +1,7 @@
 {
     "extends": "@parcel/config-default",
     "resolvers": [
+        "./parcel/plugins/resolvers/sourceTree.js",
         "@parcel/resolver-glob",
         "..."
     ],
