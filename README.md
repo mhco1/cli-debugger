@@ -6,12 +6,16 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 ## Indice
 
+- [Tecnologias ultilizadas](#tecnologias-ultilizadas)
 - [Em desenvolvimento](#em-desenvolvimento)
 - [Instalação](#instalação)
   - [Produção](#produção)
   - [Desenvolvimento](#desenvolvimento)
 - [Estruntura do projeto](#estruntura-do-projeto)
+  - [Arquivos importantes](#arquivos-importantes)
   - [Diretorios importantes](#diretorios-inportantes)
+- [Plugins](#plugins)
+  - [resolvers/sourceTree](#resolverssourcetree)
 - [Data](#data)
 
 ## Tecnologias ultilizadas
@@ -44,7 +48,7 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 
 ### Desenvolvimento
 
-Abra um terminal para ler as modificaçãoes e refazer o buider de modo atomatico.
+Abra um terminal para ler as modificaçãoes e refazer o builder de modo atomatico.
 
 Execute:
 
@@ -64,7 +68,7 @@ Depois abra outro terminal e execute o progama:
 >
 >Este não é commitado e pode substituir o component `App.js` durante os testes
 >
->Tambem, ao inves de executar o progama normalmente, execute:
+>Então, ao inves de executar o progama normalmente, execute:
 >
 >```bash
 > npm run experiment
@@ -72,66 +76,58 @@ Depois abra outro terminal e execute o progama:
 
 ## Estruntura do projeto
 
-O projeto todo é estrunturado na pasta `/src`.
+O projeto é esrunturado apartir de `/app`;
+
+Todos as partes que compoem o codigo do projeto estão estrunturadas em `/app/src`
 
 ### Arquivos importantes
 
-- `/src/cli.js`
+- `/app/cli.js`
 
     Primeiro arquivo interpretado ao rodar o projeto.
 
     Este faz as primeiras configurações e roda o render do `React`.
 
-- `/src/App.js`
+- `/app/App.js`
 
     Pincipal componente do projeto e o primeiro a ser renderizado.
 
     Este aclopa outros componentes e rege o fluxo do progama.
 
-- `/src/cli.conf.js`
-
-    Arquivo de configurações padrões.
-
-- `/src/data.js`
+- `/app/data.js`
 
     Amarzena dados do progama, [veja aqui](#data)
 
-- `/src/serve.js`
+- `/app/serve.js`
 
-    Ultilizado como instancia de um servidor que ira interpretar codigos nodejs
+    Ultilizado como instancia do servidor que ira interpretar codigos nodejs
 
 ### Diretorios inportantes
 
-Dentro de `/src` temos alguns diretorios importantes que seguem a seguinte estruntura:
+Dentro de `/src` temos alguns diretorios importantes
 
-- `/src/$DIRETORIO/`: diretorio principal à alguma funcionalidade do projeto,
-  - `./src/*`: arquivos da funcinalidade,
-  - `./index.js`: arquivo de indexação dos arquivos em `./src/*` ultilizado pelo projeto.
+Os arquivos contidos em `/scr` são convertidos em objecto durante o `building` do projeto pelo plugin `resolvers/sourceTree`, para saber mais [veja aqui](#resolverssourcetree)
 
 São os diretorios:
 
-- `/src/components/`
+- `/app/src/components/`
 
     Componentes ultilizados pelo sistema.
 
-- `/src/events/`
+- `/app/src/events/`
 
     Eventos que são emitidos durante o fluxo do progama
     Geralmente com a finalidade de integrar partes opostas
 
-- `/src/hooks/`
+- `/app/src/hooks/`
 
     Hooks personalizados que podem ser reaproveitados entre componentes
 
-- `/src/utils/`
+- `/app/src/utils/`
 
     Funcoes personalizadas e independentes para abstrair melhor codigo
 
-Caso queira saber mais sobre cada diretorio [veja aqui](#formato-dos-diretorios)
-
-## Formato dos diretorios
-
-### nomenclatura dos arquivos
+Para cada diretorio temos uma nomenclatura certa:
 
 | Arquivos       | Nomenclatura    |
 |----------------|-----------------|
@@ -140,38 +136,65 @@ Caso queira saber mais sobre cada diretorio [veja aqui](#formato-dos-diretorios)
 | **hooks**      | camelCase       |
 | **utils**      | camelCase       |
 
-### exportando
+## Plugins
 
-Como o index para os arquivos é gerado, o uso da exportação `default` torna-se instavel.
+### resolvers/sourceTree
 
-Portanto, substitui-se `default` pela variavel `_`.
+Plugin com o objetivo de transpor a cadeia de arquivos e diretorios em `/app/src/` para uma arvore de objetos
 
-```javascript
-    export const _ = /* funcionalidade */
-```
+O plugin interpreta arquivos e diretorios da seguinte forma:
 
-Caso nescessario, de forma alternativa, podemos exportar mais de uma variavel.
+- `diretorios`
 
-```javascript
-    export const aaa = /* funcionalidade 1*/
-    export const bbb = /* funcionalidade 2*/
-```
+    Objetos do qual cada arquivo contido é ulilizado como propriedade
 
-### importando
+- `arquivos`
+
+    Objetos do qual cada export é uma propriedade caso não contenha um valor padrão exportado
 
 ```javascript
-    import { exemplo } from '/$DIRETORIO'; // exemplo._
+    import { File } from '~path/to/directory';
+    // or
+    import * as Diectory from '~path/to/directory';
 ```
 
-> Os eventos, diferente dos demais, são expostos em uma instancia do `EventEmitter`.
->
-> ```javascript
->   import { event } from '/events';
->
->   //...
->
->   event.emit('exemple');
-> ```
+#### Exemplo
+
+Sistema de pastas:
+
+- `/app/src`
+  - `folder`
+    - `folder2`
+      - `ddd.js`
+    - `bbb.js`
+    - `ccc.js`
+  - `aaa.js`
+
+Codigo:
+
+``` javascript
+    import * as folder from '~folder'; // { folder2: {...}, bbb: ..., ccc: ...,  }
+    import { bbb } from '~folder'; // import file /app/src/folder/bbb.js
+    import { folder2 } from '~folder'; // { ddd: ... }
+    import { ddd } from '~folder/folder2'; // import file /app/src/folder/folder2/ddd.js
+    import aaa from '~aaa.js' // import file /app/src/aaa.js
+```
+
+#### Diretorio events
+
+O diretorio `/app/src/events` é uma exeção;
+
+Todos os arquivos contidos em `events` são interpretados como eventos e portanto devem retornar somente uma função como padrão
+
+Ao importar `events`, estará importando, então, uma instancia de `EventEmitter` que roda por todo o aplicativo
+
+> `events` não suporta importar diretorios e subdiretorios
+
+```javascript
+    import { event } from "~events";
+
+    event.emit('File', /* args... */);
+```
 
 ## Data
 
@@ -182,21 +205,15 @@ Expoem um objeto do qual cada campo referece a uma informação diferente
 Por exemplo, suponhamos que exportamos um objeto `Exemplo` que armazena algumas configurações
 
 ```javascript
-    //...
-
     export const exemplo = {
 
         // configurações...
 
     };
-
-    //...
 ```
 
-Podemos, então, utiliza-lo em qualquer outra parte do codigo somente importando o arquivo `/src/data`
+Podemos, então, utiliza-lo em qualquer outra parte do codigo somente importando o arquivo `/app/src/data`
 
 ```javascript
-    import { exemplo } from '/data';
-
-    //...
+    import { exemplo } from '~data.js';
 ```
