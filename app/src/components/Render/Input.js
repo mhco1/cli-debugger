@@ -63,7 +63,7 @@ export default ({ onSubmit, type, setType }) => {
             };
 
             return <>
-                <Menu.submenu
+                <Menu.Submenu
                     items={objectCreateItems(data.props)}
                     onSubmit={handleSubmit}
                 />
@@ -90,7 +90,7 @@ export default ({ onSubmit, type, setType }) => {
             return <>
                 <Box flexDirection='row'>
                     <Text><Name />( </Text>
-                    <Menu.list row buttons={buttons} />
+                    <Menu.List row buttons={buttons} />
                     <Text>)</Text>
                 </Box>
             </>
