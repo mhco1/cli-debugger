@@ -6,10 +6,10 @@ import { Render } from '~components';
 
 export default ({ onSubmit }) => {
     const [context, update, hist] = useContext();
-    const [type, setType] = useState('default');
+    const [type, setType] = useState('Default');
 
     const modifySetType = (type) => {
-        const res = ['value', 'error'].includes(type) ? 'default' : type;
+        const res = ['Value', 'Error'].includes(type) ? 'Default' : type;
         setType(res);
     };
 

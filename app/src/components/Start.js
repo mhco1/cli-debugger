@@ -5,13 +5,12 @@ import pkg from '/package.json';
 import { toPromise } from '~utils';
 import { Text } from '~components';
 
-const asciify_p = toPromise(asciify);
-
 export default () => {
     const [title, setTitle] = useState('');
 
     useEffect(() => {
         (async () => {
+            const asciify_p = toPromise(asciify);
             const title = (await asciify_p(pkg.name, { font: 'drpepper' }));
             setTitle(title);
         })()

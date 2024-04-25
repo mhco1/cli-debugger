@@ -18,11 +18,11 @@ export const evaluate = async (evaluate) => {
     const node = context.c[context.now];
 
     if (/EvalError|InternalError|RangeError|ReferenceError|SyntaxError|TypeError|URIError/g.test(evaluate.className)) return {
-        type: 'error', value: evaluate.description,
+        type: 'Error', value: evaluate.description,
     }
 
     if (evaluate.type === 'undefined' || /string|number|boolean/g.test(evaluate.type)) return {
-        type: 'value', value: evaluate.value || '',
+        type: 'Value', value: evaluate.value || '',
     };
 
     if (/function|object/g.test(evaluate.type)) {
@@ -30,13 +30,13 @@ export const evaluate = async (evaluate) => {
         const _props = (await node.send('props', { id: evaluate.objectId })).result;
 
         if (evaluate.type == 'object') {
-            res.type = evaluate.subtype == 'array' ? 'array' : 'object';
+            res.type = evaluate.subtype == 'array' ? 'Array' : 'Object';
             res.props = props(_props);
             return res
         }
 
         return {
-            type: 'function',
+            type: 'Function',
             name: _props.filter(el => el.name == 'name')[0].value.value,
             id: evaluate.objectId,
         }

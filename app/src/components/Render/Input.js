@@ -4,8 +4,7 @@ import { } from '@inkjs/ui';
 import * as types from '~components/Render/Types/Input';
 
 export default (props) => {
-    const dataName = props.type[0].toUpperCase() + props.type.slice(1);
-    const Data = types[dataName];
+    const Data = types[props.type];
 
     return <>
         <Data {...props} />

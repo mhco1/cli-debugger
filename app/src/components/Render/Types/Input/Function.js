@@ -20,7 +20,7 @@ export default ({ onSubmit, type, setType }) => {
                 const _data = await callFunction(data.id, parameters);
                 response.update(_data);
                 response.disconnect();
-                setType('value');
+                setType('Value');
             }
         }
     }];

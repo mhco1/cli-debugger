@@ -28,8 +28,8 @@ const generateFiles = (dir, path, isEvent) => async () => {
 
         file.code = {};
         file.code.export = `~${nodePath.normalize(`./${path}/${file.name}`)}`;
-        file.code.import = `${isEvent ? 'import' : 'export'} ${file.isDefault ? '' : '* as'} ${file.nameTag} from "${file.code.export}";\n`;
-        file.code.event = isEvent && `event.on("${file.nameTag}",${file.nameTag});\n`;
+        file.code.import = `${isEvent ? 'import' : 'export'} ${file.isDefault ? '' : '* as'} ${file.nameTag} from "${file.code.export}";`;
+        file.code.event = isEvent && `event.on("${file.nameTag}",${file.nameTag});`;
         res.push(file)
     }
 

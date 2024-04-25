@@ -8,8 +8,7 @@ import * as types from '~components/Render/Types/Hist';
 export default (props) => {
     const useResponse = componentExternalUpdate('render_function')[1];
     const data = useResponse(null);
-    const dataName = data && data.type[0].toUpperCase() + data.type.slice(1);
-    const Data = data ? types[dataName] : () => <></>;
+    const Data = data ? types[data.type] : () => <></>;
 
     return <>
         <Data {...{ ...props, data }} />
