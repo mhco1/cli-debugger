@@ -3,13 +3,13 @@ import { context } from '~data.js'
 export const props = (props) => {
     return props.map(({ name, value }) => (
         /string|number|boolean/g.test(value.type) ?
-            { type: 'value', name, value: value.value } :
+            { type: 'Value', name, value: value.value } :
             value.type == 'object' ?
                 value.subtype == 'array' ?
-                    { type: 'array', name } :
-                    { type: 'object', name, id: value.objectId } :
+                    { type: 'Array', name, id: value.objectId} :
+                    { type: 'Object', name, id: value.objectId } :
                 value.type == 'function' ?
-                    { type: 'function', name } :
+                    { type: 'Function', name } :
                     {}
     ))
 };

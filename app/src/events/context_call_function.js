@@ -1,5 +1,5 @@
 import { context } from '~data.js';
-import { processResult } from '~utils';
+import { server } from '~utils';
 
 export default async (id, _parameters, callback) => {
     if (context.now.length == 0) throw Error('No context was selected');
@@ -13,6 +13,6 @@ export default async (id, _parameters, callback) => {
     }
 
     const evaluate = (await node.send('call', { id, parameters })).result;
-    const res = await processResult.evaluate(evaluate);
+    const res = await server.process.evaluate(evaluate);
     callback(undefined, res);
 }
