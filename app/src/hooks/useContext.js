@@ -30,7 +30,6 @@ export default () => {
 
         event.on('context_select', eventUpdate);
         event.on('context_update', eventUpdate);
-        // event.on('context_create', eventUpdate);
 
         if (data.context.start) {
             data.context.start = false;
@@ -42,7 +41,6 @@ export default () => {
         return () => {
             event.off('context_select', eventUpdate);
             event.off('context_update', eventUpdate);
-            // event.off('context_create', eventUpdate);
         }
     }, [])
 

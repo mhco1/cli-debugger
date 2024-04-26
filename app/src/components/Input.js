@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import { } from '@inkjs/ui';
 import { string } from '~utils';
+import { useContext } from '~hooks';
 
 const armInit = {
     pos: 0,
@@ -25,6 +26,7 @@ const isHistoryEnabled = (hist) => {
 const Cursor = ({ k }) => <Text inverse={true}>{k.length == 0 ? ' ' : k}</Text>;
 
 export default ({ onSubmit, value, onHistory }) => {
+    const [context, update, hist] = useContext();
     const [arm, setArm] = useState(armInit);
     const { txt, pos } = arm;
     const [txt1, txt2, k] = txtSplit(txt, pos);
@@ -94,6 +96,8 @@ export default ({ onSubmit, value, onHistory }) => {
                 return 'end'
             },
         };
+
+        if (context.name.length < 1) return
 
         for (const cmd of Object.keys(exe)) if (key[cmd]) if (await exe[cmd]() === 'end') return;
 
