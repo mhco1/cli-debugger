@@ -34,7 +34,7 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
 - [ ] Visualização do resultado da operação
   - [x] Strings /Number /Boolean
   - [x] Object
-  - [ ] Array
+  - [x] Array
   - [x] Function
 
 ## Instalação
