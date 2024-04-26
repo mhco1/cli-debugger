@@ -31,6 +31,8 @@ Ferramenta cli com a finalidade de interpretar e configurar projetos em nodejs
   - [ ] autoexecutar
   - [ ] autocompletar
 - [ ] Menu de configurações
+- [ ] comandos
+  - [ ] selecionar contexto
 - [ ] Visualização do resultado da operação
   - [x] Strings /Number /Boolean
   - [x] Object
